@@ -1,0 +1,186 @@
+/* Ionic Variables and Theming */
+
+:root {
+  /** Primary - Blue **/
+  --ion-color-primary: #64B5F6;
+  --ion-color-primary-rgb: 100, 181, 246;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #589fd9;
+  --ion-color-primary-tint: #74bcf7;
+
+  /** Secondary - Green **/
+  --ion-color-secondary: #69F0AE;
+  --ion-color-secondary-rgb: 105, 240, 174;
+  --ion-color-secondary-contrast: #1c1c1c;
+  --ion-color-secondary-contrast-rgb: 28, 28, 28;
+  --ion-color-secondary-shade: #5cd399;
+  --ion-color-secondary-tint: #78f2b6;
+
+  /** Tertiary - Yellow **/
+  --ion-color-tertiary: #FFD54F;
+  --ion-color-tertiary-rgb: 255, 213, 79;
+  --ion-color-tertiary-contrast: #1c1c1c;
+  --ion-color-tertiary-contrast-rgb: 28, 28, 28;
+  --ion-color-tertiary-shade: #e0bb46;
+  --ion-color-tertiary-tint: #ffd961;
+
+  /** Success **/
+  --ion-color-success: #2dd36f;
+  /** Warning **/
+  --ion-color-warning: #ffc409;
+  /** Danger **/
+  --ion-color-danger: #eb445a;
+  /** Light **/
+  --ion-color-light: #f4f5f8;
+  /** Medium **/
+  --ion-color-medium: #92949c;
+  /** Dark **/
+  --ion-color-dark: #222428;
+}
+
+body {
+  --ion-font-family: 'Nunito', sans-serif;
+  background-color: #fdfcf0 !important;
+}
+
+ion-content {
+  --background: #fdfcf0;
+}
+
+/* Global Button Style Overrides */
+ion-button {
+  --border-radius: 16px;
+  font-weight: 800;
+}
+
+/* Custom Playful Colors */
+:root {
+  --app-bg: #fdfcf0;
+  --card-bg: #ffffff;
+  --border-color: #1c1c1c;
+  --accent-yellow: #fbc02d;
+  --accent-blue: #1976d2;
+  --accent-green: #388e3c;
+  --text-dark: #1c1c1c;
+  --text-muted: #666;
+}
+
+/* Global Navigation Bar Styles */
+.home-footer {
+  background-color: white;
+  padding-bottom: 10px;
+  border-top: 3px solid #1c1c1c;
+}
+
+.nav-bar {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 70px;
+  padding: 0 10px;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: #999;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  z-index: 1000;
+}
+
+.nav-item ion-icon {
+  font-size: 24px;
+}
+
+.nav-item span {
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.nav-item.active {
+  color: #1c1c1c;
+  transform: translateY(-5px);
+}
+
+.nav-item.active ion-icon {
+  font-size: 30px;
+  padding: 8px;
+  background-color: #FFD54F;
+  border: 3px solid #1c1c1c;
+  border-radius: 16px;
+  box-shadow: 3px 3px 0px #1c1c1c;
+  margin-bottom: -4px;
+}
+
+/* Global Animated Navbar Indicator */
+.nav-indicator {
+  position: absolute;
+  bottom: -2px;
+  width: 4px;
+  height: 4px;
+  background: #1c1c1c;
+  border-radius: 50%;
+}
+
+/* Standardized Header Styles */
+.app-header {
+  --background: white;
+  border-bottom: 4px solid #1c1c1c;
+}
+
+.app-toolbar {
+  --padding-top: 10px;
+  --padding-bottom: 10px;
+  --padding-start: 20px;
+  --padding-end: 20px;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-logo-box {
+  width: 42px;
+  height: 42px;
+  background: #FFD54F;
+  border: 3px solid #1c1c1c;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  box-shadow: 3px 3px 0 #1c1c1c;
+}
+
+.header-app-name {
+  font-size: 20px;
+  font-weight: 900;
+  color: #1c1c1c;
+  letter-spacing: -0.5px;
+}
+
+.header-action-btn {
+  width: 42px;
+  height: 42px;
+  background: white;
+  border: 3px solid #1c1c1c;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  box-shadow: 3px 3px 0 #1c1c1c;
+  transition: all 0.1s;
+}
+
+.header-action-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 #1c1c1c;
+}
