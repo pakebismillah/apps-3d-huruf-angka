@@ -62,11 +62,6 @@
   box-shadow: 0 8px 0 #FBC02D;
 }
 
-.custom-segment {
-  --background: #f5f5f5;
-  border-radius: 15px;
-  padding: 4px;
-}
 
 /* Discovery View */
 .discovery-view {
