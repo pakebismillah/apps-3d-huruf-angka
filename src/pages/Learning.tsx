@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { 
   IonContent, 
   IonPage, 
@@ -14,6 +14,7 @@ import {
 } from '@ionic/react';
 import { 
   volumeMediumOutline, 
+  volumeHighOutline,
   chevronBackOutline, 
   chevronForwardOutline,
   star,
@@ -22,73 +23,73 @@ import {
   trashOutline,
   gridOutline,
   sparklesOutline,
-  arrowBackOutline
+  arrowBackOutline,
+  textOutline,
+  calculatorOutline
 } from 'ionicons/icons';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ref, update } from "firebase/database";
 import { db } from "../firebase";
+import { letterQuests, numberQuests } from '../data/learningData';
+import type { LetterQuest, NumberQuest } from '../data/learningData';
 import './Learning.css';
 
-const quests = [
-  { 
-    id: 'A', 
-    letter: 'A', 
-    title: 'A UNTUK APEL', 
-    subtitle: 'Mari belajar mengenal huruf A!',
-    image: '/assets/images/logo.png',
-    bgColor: '#FFF9C4',
-    words: [
-      { text: 'APEL', phonetic: 'A-pel', emoji: '🍎', audio: 'apel' },
-      { text: 'ANGGUR', phonetic: 'Ang-gur', emoji: '🍇', audio: 'anggur' },
-      { text: 'AYAM', phonetic: 'A-yam', emoji: '🐔', audio: 'ayam' }
-    ],
-    funFact: 'Apel itu sehat dan bikin kita kuat!'
-  },
-  { 
-    id: 'B', 
-    letter: 'B', 
-    title: 'B UNTUK BUKU', 
-    subtitle: 'Mari belajar mengenal huruf B!',
-    image: '/assets/images/logo.png',
-    bgColor: '#E3F2FD',
-    words: [
-      { text: 'BUKU', phonetic: 'Bu-ku', emoji: '📚', audio: 'buku' },
-      { text: 'BOLA', phonetic: 'Bo-la', emoji: '⚽', audio: 'bola' },
-      { text: 'BEBEK', phonetic: 'Be-bek', emoji: '🦆', audio: 'bebek' }
-    ],
-    funFact: 'Membaca buku bikin kita jadi pintar!'
-  }
-];
+// ============ Audio Helper ============
+function playAudioFile(src: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const audio = new Audio(src);
+    audio.onended = () => resolve();
+    audio.onerror = () => reject(new Error('File not found'));
+    audio.play().catch(reject);
+  });
+}
+
+function speakText(text: string, lang = 'id-ID'): Promise<void> {
+  return new Promise((resolve) => {
+    if (!('speechSynthesis' in window)) { resolve(); return; }
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = lang;
+    utter.rate = 0.85;
+    utter.onend = () => resolve();
+    utter.onerror = () => resolve();
+    window.speechSynthesis.speak(utter);
+  });
+}
 
 const Learning: React.FC = () => {
   const router = useIonRouter();
   const [currentIdx, setCurrentIdx] = useState(0);
   const [viewMode, setViewMode] = useState<'discovery' | 'tracing'>('discovery');
+  const [contentMode, setContentMode] = useState<'huruf' | 'angka'>('huruf');
   const [showPraise, setShowPraise] = useState(false);
   const [praiseText, setPraiseText] = useState('');
   const [isDrawing, setIsDrawing] = useState(false);
   const [showLetterSelector, setShowLetterSelector] = useState(false);
   const [stars, setStars] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [playingWord, setPlayingWord] = useState<string | null>(null);
   
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const quest = quests[currentIdx];
+
+  const isHuruf = contentMode === 'huruf';
+  const totalItems = isHuruf ? letterQuests.length : numberQuests.length;
+  const currentLetter = isHuruf ? letterQuests[currentIdx] : null;
+  const currentNumber = !isHuruf ? numberQuests[currentIdx] : null;
+  const displayChar = isHuruf ? currentLetter!.letter : String(currentNumber!.number);
+  const bgColor = isHuruf ? currentLetter!.bgColor : currentNumber!.bgColor;
 
   // Load user data
   useEffect(() => {
-    const loadUser = () => {
-      const currentUserId = localStorage.getItem('cerdika_currentUser');
-      if (currentUserId) {
-        const storedProfiles = localStorage.getItem('cerdika_users');
-        if (storedProfiles) {
-          const profiles = JSON.parse(storedProfiles);
-          const foundUser = profiles.find((p: any) => p.id === currentUserId);
-          if (foundUser) {
-            setStars(foundUser.stars || 0);
-          }
-        }
+    const currentUserId = localStorage.getItem('cerdika_currentUser');
+    if (currentUserId) {
+      const storedProfiles = localStorage.getItem('cerdika_users');
+      if (storedProfiles) {
+        const profiles = JSON.parse(storedProfiles);
+        const foundUser = profiles.find((p: any) => p.id === currentUserId);
+        if (foundUser) setStars(foundUser.stars || 0);
       }
-    };
-    loadUser();
+    }
   }, []);
 
   const addStar = async () => {
@@ -98,19 +99,12 @@ const Learning: React.FC = () => {
         const userRef = ref(db, "students/" + currentUserId);
         const newStars = stars + 1;
         setStars(newStars);
-        await update(userRef, {
-          stars: newStars,
-          lastLetter: quest.letter
-        });
+        await update(userRef, { stars: newStars, lastItem: displayChar });
       } catch (error) {
         console.error("Error updating stars/progress:", error);
       }
     }
   };
-
-  if (!quest) {
-    return <IonPage><IonContent><p>No learning content available.</p></IonContent></IonPage>;
-  }
 
   // Canvas Logic
   useEffect(() => {
@@ -163,7 +157,7 @@ const Learning: React.FC = () => {
   };
 
   const handleNext = () => {
-    if (currentIdx < quests.length - 1) {
+    if (currentIdx < totalItems - 1) {
       setCurrentIdx(currentIdx + 1);
       setViewMode('discovery');
     }
@@ -176,33 +170,52 @@ const Learning: React.FC = () => {
     }
   };
 
-  const playLetterSound = () => {
+  // ============ AUDIO: Huruf/Angka utama ============
+  const playMainSound = useCallback(async () => {
+    if (isPlaying) return;
+    setIsPlaying(true);
     try {
-      const audio = new Audio(`/assets/audio/huruf_${quest.letter.toLowerCase()}.mp3`);
-      audio.play().catch(e => console.log("Audio huruf belum ada.", e));
-    } catch (e) {
-      console.log(e);
+      if (isHuruf) {
+        await playAudioFile(`/assets/audio/huruf_${displayChar.toLowerCase()}.mp3`);
+      } else {
+        await playAudioFile(`/assets/audio/angka_${currentNumber!.number}.mp3`);
+      }
+    } catch {
+      // Fallback: Web Speech API
+      const text = isHuruf ? displayChar : currentNumber!.name;
+      await speakText(text);
     }
-  };
+    setIsPlaying(false);
+  }, [isHuruf, displayChar, currentNumber, isPlaying]);
 
-  const playWord = (word: any) => {
+  // ============ AUDIO: Kata contoh ============
+  const playWord = useCallback(async (word: { text: string; audio: string }) => {
+    if (playingWord) return;
+    setPlayingWord(word.audio);
     setPraiseText(`Hebat! ${word.text}`);
     setShowPraise(true);
     setTimeout(() => setShowPraise(false), 1500);
 
     try {
-      const audio = new Audio(`/assets/audio/kata_${word.audio}.mp3`);
-      audio.play().catch(e => console.log("Audio kata belum ada.", e));
-    } catch (e) {
-      console.log(e);
+      await playAudioFile(`/assets/audio/kata_${word.audio}.mp3`);
+    } catch {
+      const letter = currentLetter?.letter || '';
+      await speakText(`${letter} untuk ${word.text}`);
     }
-  };
+    setPlayingWord(null);
+  }, [playingWord, currentLetter]);
 
   const handleFinishTracing = () => {
     addStar();
     setPraiseText("Tulisanmu Bagus Banget!");
     setShowPraise(true);
     setTimeout(() => setShowPraise(false), 2000);
+  };
+
+  const switchContent = (mode: 'huruf' | 'angka') => {
+    setContentMode(mode);
+    setCurrentIdx(0);
+    setViewMode('discovery');
   };
 
   return (
@@ -226,6 +239,24 @@ const Learning: React.FC = () => {
             </button>
           </IonButtons>
         </IonToolbar>
+
+        {/* Tab Huruf / Angka */}
+        <div className="content-mode-selector">
+          <button 
+            className={`content-tab ${isHuruf ? 'active' : ''}`} 
+            onClick={() => switchContent('huruf')}
+          >
+            <IonIcon icon={textOutline} />
+            <span>Huruf</span>
+          </button>
+          <button 
+            className={`content-tab ${!isHuruf ? 'active' : ''}`} 
+            onClick={() => switchContent('angka')}
+          >
+            <IonIcon icon={calculatorOutline} />
+            <span>Angka</span>
+          </button>
+        </div>
         
         <div className="mode-selector-container">
           <IonSegment value={viewMode} onIonChange={e => setViewMode(e.detail.value as any)} mode="ios" className="custom-segment">
@@ -251,64 +282,87 @@ const Learning: React.FC = () => {
           <AnimatePresence mode="wait">
             {viewMode === 'discovery' ? (
               <motion.div
-                key="discovery"
+                key={`discovery-${contentMode}-${currentIdx}`}
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 1.05 }}
                 className="discovery-view"
               >
-                {/* Main Hero Card */}
+                {/* Hero Card */}
                 <div className="hero-card" style={{ borderColor: '#1c1c1c' }}>
-                  <div className="hero-letter-side" style={{ backgroundColor: quest.bgColor }}>
+                  <div className="hero-letter-side" style={{ backgroundColor: bgColor }}>
                     <motion.div 
                       className="letter-box"
                       whileTap={{ scale: 0.9 }}
-                      onClick={playLetterSound}
+                      onClick={playMainSound}
                     >
-                      <span style={{ color: '#1c1c1c' }}>{quest.letter}</span>
-                      <button className="sound-pulse">
-                        <IonIcon icon={volumeMediumOutline} />
+                      <span style={{ color: '#1c1c1c' }}>{displayChar}</span>
+                      <button className={`sound-pulse ${isPlaying ? 'playing' : ''}`}>
+                        <IonIcon icon={isPlaying ? volumeHighOutline : volumeMediumOutline} />
                       </button>
                     </motion.div>
                   </div>
                   <div className="hero-illust-side">
-                    <img src={quest.image} alt="Illust" className="floating-illust" />
+                    {isHuruf ? (
+                      <span className="hero-emoji">{currentLetter!.words[0]?.emoji || '📖'}</span>
+                    ) : (
+                      <span className="hero-emoji">{currentNumber!.emoji}</span>
+                    )}
                   </div>
                 </div>
 
                 <div className="lesson-heading">
-                  <h1 className="main-title" style={{ color: '#1c1c1c' }}>{quest.title}</h1>
-                  <p className="sub-title" style={{ color: '#666' }}>{quest.subtitle}</p>
+                  <h1 className="main-title" style={{ color: '#1c1c1c' }}>
+                    {isHuruf ? currentLetter!.title : `ANGKA ${currentNumber!.number}`}
+                  </h1>
+                  <p className="sub-title" style={{ color: '#666' }}>
+                    {isHuruf ? currentLetter!.subtitle : `Mari belajar angka ${currentNumber!.name}!`}
+                  </p>
                 </div>
 
-                {/* Word Association Grid */}
-                <div className="words-association-grid">
-                  {quest.words.map((word, i) => (
-                    <motion.div 
-                      key={i} 
-                      className="word-card"
-                      style={{ borderLeft: `8px solid ${quest.bgColor}` }}
-                      whileHover={{ y: -5 }}
-                      onClick={() => playWord(word)}
-                    >
-                      <span className="word-emoji">{word.emoji}</span>
-                      <div className="word-text-box">
-                        <span className="word-main" style={{ color: '#1c1c1c' }}>
-                          <span className="highlight" style={{ color: '#d32f2f' }}>{word.text[0]}</span>
-                          {word.text.slice(1)}
-                        </span>
-                        <span className="word-phonetic" style={{ color: '#888' }}>{word.phonetic}</span>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
+                {/* Word examples (huruf only) */}
+                {isHuruf && currentLetter!.words.length > 0 && (
+                  <div className="words-association-grid">
+                    {currentLetter!.words.map((word, i) => (
+                      <motion.div 
+                        key={i} 
+                        className={`word-card ${playingWord === word.audio ? 'playing' : ''}`}
+                        style={{ borderLeft: `8px solid ${bgColor}` }}
+                        whileHover={{ y: -5 }}
+                        onClick={() => playWord(word)}
+                      >
+                        <span className="word-emoji">{word.emoji}</span>
+                        <div className="word-text-box">
+                          <span className="word-main" style={{ color: '#1c1c1c' }}>
+                            <span className="highlight" style={{ color: '#d32f2f' }}>{word.text[0]}</span>
+                            {word.text.slice(1)}
+                          </span>
+                        </div>
+                        <IonIcon 
+                          icon={playingWord === word.audio ? volumeHighOutline : volumeMediumOutline} 
+                          className={`word-sound-icon ${playingWord === word.audio ? 'playing' : ''}`}
+                        />
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
 
-                {/* Fun Fact Card */}
+                {/* Number name card (angka only) */}
+                {!isHuruf && (
+                  <div className="number-name-card" style={{ backgroundColor: bgColor }}>
+                    <span className="number-big">{currentNumber!.number}</span>
+                    <span className="number-name">{currentNumber!.name}</span>
+                  </div>
+                )}
+
+                {/* Fun Fact */}
                 <div className="fun-fact-card">
                   <div className="fact-icon">💡</div>
                   <div className="fact-content">
                     <span className="fact-label" style={{ color: '#1c1c1c' }}>Tahukah Kamu?</span>
-                    <p style={{ color: '#5d4037' }}>{quest.funFact}</p>
+                    <p style={{ color: '#5d4037' }}>
+                      {isHuruf ? currentLetter!.funFact : currentNumber!.funFact}
+                    </p>
                   </div>
                 </div>
               </motion.div>
@@ -322,8 +376,7 @@ const Learning: React.FC = () => {
               >
                 <div className="tracing-container">
                   <div className="canvas-wrapper">
-                    {/* Background Guide Letter */}
-                    <div className="guide-letter">{quest.letter}</div>
+                    <div className="guide-letter">{displayChar}</div>
                     <canvas 
                       ref={canvasRef}
                       width={300}
@@ -363,10 +416,10 @@ const Learning: React.FC = () => {
               <IonIcon icon={chevronBackOutline} />
             </button>
             <div className="current-step">
-              <span>{currentIdx + 1} / {quests.length}</span>
+              <span>{currentIdx + 1} / {totalItems}</span>
             </div>
             <button 
-              className={`nav-btn-round ${currentIdx === quests.length - 1 ? 'disabled' : ''}`}
+              className={`nav-btn-round ${currentIdx === totalItems - 1 ? 'disabled' : ''}`}
               onClick={handleNext}
             >
               <IonIcon icon={chevronForwardOutline} />
@@ -374,33 +427,37 @@ const Learning: React.FC = () => {
           </div>
         </div>
 
-        {/* Letter Selector Modal */}
+        {/* Letter/Number Selector Modal */}
         <IonModal 
           isOpen={showLetterSelector} 
           onDidDismiss={() => setShowLetterSelector(false)}
           className="letter-selector-modal"
-          breakpoints={[0, 0.5]}
-          initialBreakpoint={0.5}
+          breakpoints={[0, 0.6]}
+          initialBreakpoint={0.6}
         >
           <div className="selector-content">
-            <h3>Pilih Huruf</h3>
+            <h3>{isHuruf ? 'Pilih Huruf' : 'Pilih Angka'}</h3>
             <div className="selector-grid">
-              {quests.map((q, i) => (
-                <div 
-                  key={q.id} 
-                  className={`selector-item ${i === currentIdx ? 'active' : ''}`}
-                  onClick={() => {
-                    setCurrentIdx(i);
-                    setShowLetterSelector(false);
-                    setViewMode('discovery');
-                  }}
-                >
-                  {q.letter}
-                </div>
-              ))}
-              <div className="selector-item locked">C</div>
-              <div className="selector-item locked">D</div>
-              <div className="selector-item locked">E</div>
+              {isHuruf
+                ? letterQuests.map((q, i) => (
+                    <div 
+                      key={q.id} 
+                      className={`selector-item ${i === currentIdx ? 'active' : ''}`}
+                      onClick={() => { setCurrentIdx(i); setShowLetterSelector(false); setViewMode('discovery'); }}
+                    >
+                      {q.letter}
+                    </div>
+                  ))
+                : numberQuests.map((q, i) => (
+                    <div 
+                      key={q.id} 
+                      className={`selector-item ${i === currentIdx ? 'active' : ''}`}
+                      onClick={() => { setCurrentIdx(i); setShowLetterSelector(false); setViewMode('discovery'); }}
+                    >
+                      {q.number}
+                    </div>
+                  ))
+              }
             </div>
           </div>
         </IonModal>
