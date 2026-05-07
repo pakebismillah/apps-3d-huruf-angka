@@ -13,10 +13,11 @@ const Loading: React.FC = () => {
       setProgress((prev) => {
         if (prev >= 100) {
           clearInterval(timer);
-          router.push('/register', 'forward', 'replace');
+          sessionStorage.setItem('cerdika_loaded', 'true');
+          router.push('/profiles', 'forward', 'replace');
           return 100;
         }
-        return prev + 2; // increments of 2%
+        return prev + 2;
       });
     }, 50);
 
@@ -25,31 +26,32 @@ const Loading: React.FC = () => {
 
   return (
     <IonPage>
-      <IonContent className="loading-content">
-        <div className="loading-container">
-          <div className="circle circle-top-left"></div>
-          <div className="circle circle-top-right"></div>
-          <div className="circle circle-bottom-right"></div>
-
-          <div className="logo-container">
-            <div className="logo-badge">
-              <img src="/assets/images/logo.png" alt="Squirrel Academy" className="logo-image" />
-              <div className="logo-text">SQUIRREL<br />ACADEMY</div>
+      <IonContent className="loading-content-v2">
+        <div className="loading-screen-v2">
+          {/* Corner Blobs */}
+          <div className="corner-blob top-left"></div>
+          <div className="corner-blob top-right"></div>
+          <div className="corner-blob bottom-right"></div>
+          
+          <div className="loading-main-v2">
+            {/* Logo Area (Empty for now) */}
+            <div className="logo-placeholder-v2">
+              <div className="logo-circle-v2">
+                <div className="logo-inner-ring">
+                  <div className="brand-text-v2">CERDIKA</div>
+                </div>
+              </div>
             </div>
-            <div className="logo-shadow"></div>
-          </div>
 
-          <h1 className="brand-title">Cerdika</h1>
-
-          <div className="progress-container">
-            <div className="progress-bar-outline">
-              <div 
-                className="progress-bar-fill" 
-                style={{ width: `${progress}%` }}
-              ></div>
-            </div>
-            <div className="loading-text">
-              Loading... <IonIcon icon={syncOutline} className="spinner-icon" />
+            {/* Progress Section */}
+            <div className="loading-progress-v2">
+              <div className="bar-container-v2">
+                <div 
+                  className="bar-fill-v2" 
+                  style={{ width: `${progress}%` }}
+                ></div>
+              </div>
+              <p className="loading-label-v2">Loading... <span>🔄</span></p>
             </div>
           </div>
         </div>

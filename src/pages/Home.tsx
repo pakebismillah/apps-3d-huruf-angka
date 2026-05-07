@@ -37,8 +37,9 @@ const Home: React.FC = () => {
   const router = useIonRouter();
   const [user, setUser] = useState<UserProfile | null>(null);
 
+  const currentUserId = localStorage.getItem('cerdika_currentUser');
+
   useEffect(() => {
-    const currentUserId = localStorage.getItem('cerdika_currentUser');
     if (!currentUserId) {
       router.push('/profiles', 'root', 'replace');
       return;
@@ -49,43 +50,46 @@ const Home: React.FC = () => {
       if (snapshot.exists()) {
         setUser({ id: snapshot.key, ...snapshot.val() } as UserProfile);
       } else {
-        // User not found in DB
         localStorage.removeItem('cerdika_currentUser');
         router.push('/profiles', 'root', 'replace');
       }
     });
 
     return () => unsub();
-  }, [router]);
+  }, [currentUserId, router]);
 
-  const handleLogout = () => {
-    localStorage.removeItem('cerdika_currentUser');
-    router.push('/profiles', 'root', 'replace');
-  };
+
 
   if (!user) return null;
 
   return (
     <IonPage>
-      <IonHeader className="ion-no-border app-header">
-        <IonToolbar className="app-toolbar">
-          <div className="header-content">
-            <div className="header-logo-box" style={{backgroundColor: user.avatarColor}}>
-              <span>{user.avatarEmoji}</span>
-            </div>
-            <div className="header-text-info">
-              <span className="header-app-name">Cerdika</span>
-              <div className="header-badge-row">
-                <IonIcon icon={star} color="warning" />
-                <span className="badge-text">{user.stars} Bintang</span>
+      <IonHeader className="ion-no-border app-header-v2">
+        <IonToolbar className="app-toolbar-v2">
+          <div className="header-container-v2">
+            <div className="header-left">
+              <motion.div 
+                className="logo-circle-v2" 
+                style={{backgroundColor: user.avatarColor}}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => router.push('/profile')}
+              >
+                <span className="logo-emoji">{user.avatarEmoji}</span>
+                <div className="logo-sparkle"></div>
+              </motion.div>
+              <div className="brand-info-v2">
+                <h2 className="brand-name-v2">{user.name}</h2>
+                <div className="stars-pill-v2">
+                  <IonIcon icon={star} />
+                  <span>{user.stars} Bintang</span>
+                </div>
               </div>
             </div>
+            
+            <div className="header-right">
+              {/* Profile button removed per user request */}
+            </div>
           </div>
-          <IonButtons slot="end">
-            <button className="header-action-btn" onClick={handleLogout}>
-              <IonIcon icon={logOutOutline} />
-            </button>
-          </IonButtons>
         </IonToolbar>
       </IonHeader>
 
@@ -103,7 +107,7 @@ const Home: React.FC = () => {
 
           <div className="learning-cards">
             {/* Card 1: Bahasa Indonesia */}
-            <div className="learning-card card-yellow" onClick={() => router.push('/learning')}>
+            <div className="learning-card card-yellow" onClick={() => router.push('/learning/letters')}>
               <div className="card-top">
                 <span className="card-badge">Bahasa Indonesia</span>
                 <div className="card-mini-icon">
@@ -124,7 +128,7 @@ const Home: React.FC = () => {
             </div>
 
             {/* Card 2: Matematika */}
-            <div className="learning-card card-blue" onClick={() => router.push('/learning')}>
+            <div className="learning-card card-blue" onClick={() => router.push('/learning/numbers')}>
               <div className="card-top">
                 <span className="card-badge">Matematika</span>
                 <div className="card-mini-icon">

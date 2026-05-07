@@ -14,6 +14,9 @@ interface UserProfile {
   stars: number;
 }
 
+import { motion } from 'framer-motion';
+import { star, bookOutline, pencilOutline, happyOutline } from 'ionicons/icons';
+
 const Profiles: React.FC = () => {
   const router = useIonRouter();
   const [profiles, setProfiles] = useState<UserProfile[]>([]);
@@ -26,13 +29,8 @@ const Profiles: React.FC = () => {
       snapshot.forEach((childSnapshot) => {
         profilesData.push({ id: childSnapshot.key, ...childSnapshot.val() } as UserProfile);
       });
-      // Sort or filter if needed
       setProfiles(profilesData);
-      
-      // Update local storage so other components (like Home) can read easily without refetching immediately
       localStorage.setItem('cerdika_users', JSON.stringify(profilesData));
-    }, (error) => {
-      console.error("Error fetching profiles:", error);
     });
 
     return () => unsubscribe();
@@ -49,41 +47,71 @@ const Profiles: React.FC = () => {
 
   return (
     <IonPage>
-      <IonContent className="profiles-content">
-        <div className="profiles-wrapper">
-          <div className="header-logo">
-            <div className="small-logo-badge">
-              <span style={{ fontSize: '2rem' }}>🦁</span>
-            </div>
-            <div className="logo-label">Cerdika</div>
-          </div>
+      <IonContent className="profiles-content-v2">
+        <div className="bg-decorations">
+          <motion.div animate={{ rotate: 360 }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }} className="decor-item decor-1">⭐</motion.div>
+          <motion.div animate={{ y: [0, -20, 0] }} transition={{ duration: 4, repeat: Infinity }} className="decor-item decor-2">🍎</motion.div>
+          <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 5, repeat: Infinity }} className="decor-item decor-3">🎨</motion.div>
+          <div className="blob-bg blob-left"></div>
+          <div className="blob-bg blob-right"></div>
+        </div>
 
-          <h1 className="title">Siapa yang mau belajar?</h1>
-          <p className="subtitle">Pilih profilmu di bawah ini ya!</p>
+        <div className="profiles-container-v2">
+          <motion.div 
+            className="profiles-header-v2"
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <div className="brand-badge-v2">CERDIKA</div>
+            <h1 className="main-title-v2">Halo, Teman Pintar!</h1>
+            <p className="sub-title-v2">Pilih siapa yang mau bertualang hari ini?</p>
+          </motion.div>
 
-          <div className="profiles-grid">
-            {profiles.map((profile) => (
-              <div 
+          <div className="profiles-grid-v2">
+            {profiles.map((profile, index) => (
+              <motion.div 
                 key={profile.id} 
-                className="profile-card"
+                className="profile-card-v2"
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: index * 0.1 }}
+                whileHover={{ scale: 1.05, rotate: 2 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => handleSelectProfile(profile)}
               >
                 <div 
-                  className="profile-avatar" 
-                  style={{ backgroundColor: profile.avatarColor }}
+                  className="profile-avatar-v2" 
+                  style={{ backgroundColor: profile.avatarColor || '#64B5F6' }}
                 >
-                  {profile.avatarEmoji}
+                  <span className="avatar-emoji-v2">{profile.avatarEmoji}</span>
+                  <div className="avatar-inner-ring"></div>
                 </div>
-                <div className="profile-name">{profile.name}</div>
-              </div>
+                <div className="profile-info-v2">
+                  <span className="profile-name-v2">{profile.name}</span>
+                  <div className="profile-stars-v2">
+                    <IonIcon icon={star} />
+                    <span>{profile.stars || 0}</span>
+                  </div>
+                </div>
+              </motion.div>
             ))}
             
-            <div className="profile-card add-card" onClick={handleAddProfile}>
-              <div className="profile-avatar add-avatar">
+            <motion.div 
+              className="profile-card-v2 add-new-card-v2"
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: profiles.length * 0.1 }}
+              whileHover={{ scale: 1.05, rotate: -2 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={handleAddProfile}
+            >
+              <div className="profile-avatar-v2 add-avatar-v2">
                 <IonIcon icon={addOutline} />
               </div>
-              <div className="profile-name">Anak Baru</div>
-            </div>
+              <div className="profile-info-v2">
+                <span className="profile-name-v2">Tambah Baru</span>
+              </div>
+            </motion.div>
           </div>
         </div>
       </IonContent>
