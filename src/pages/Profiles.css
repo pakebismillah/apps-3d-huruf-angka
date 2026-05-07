@@ -1,0 +1,105 @@
+.profiles-content {
+  --background: #f8f9fa;
+}
+
+.profiles-wrapper {
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100%;
+}
+
+.profiles-wrapper .header-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 40px;
+}
+
+.profiles-wrapper .small-logo-badge {
+  width: 40px;
+  height: 40px;
+  background: white;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.profiles-wrapper .logo-label {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #1c1c1c;
+  letter-spacing: -0.5px;
+}
+
+.profiles-wrapper .title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #1c1c1c;
+  margin: 0 0 10px 0;
+  text-align: center;
+}
+
+.profiles-wrapper .subtitle {
+  font-size: 1.1rem;
+  color: #666;
+  margin: 0 0 40px 0;
+  text-align: center;
+}
+
+.profiles-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+  max-width: 500px;
+}
+
+.profile-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: transform 0.2s;
+  width: 100px;
+}
+
+.profile-card:active {
+  transform: scale(0.95);
+}
+
+.profile-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  border: 4px solid white;
+}
+
+.profile-name {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #1c1c1c;
+  text-align: center;
+  word-break: break-word;
+}
+
+.add-avatar {
+  background-color: #e0e0e0;
+  color: #757575;
+  border: 4px dashed #bdbdbd;
+  box-shadow: none;
+}
+
+.add-card .profile-name {
+  color: #757575;
+}

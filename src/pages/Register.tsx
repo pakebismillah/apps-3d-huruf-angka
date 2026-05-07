@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { IonPage, IonContent, IonInput, IonButton, useIonRouter } from '@ionic/react';
+import { IonPage, IonContent, IonInput, IonButton, useIonRouter, IonAlert } from '@ionic/react';
 import { rocketOutline } from 'ionicons/icons';
 import { IonIcon } from '@ionic/react';
+import { ref, push, set } from "firebase/database";
+import { db } from "../firebase";
 import './Register.css';
 
 const avatars = [
@@ -15,18 +17,42 @@ const Register: React.FC = () => {
   const router = useIonRouter();
   const [name, setName] = useState('');
   const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
 
-  const handleStartLearning = () => {
+  const handleStartLearning = async () => {
     if (!name.trim()) {
-      alert('Tolong isi namamu dulu ya!');
+      setAlertMessage('Tolong isi namamu dulu ya!');
+      setShowAlert(true);
       return;
     }
     if (!selectedAvatar) {
-      alert('Pilih teman belajarmu dulu ya!');
+      setAlertMessage('Pilih teman belajarmu dulu ya!');
+      setShowAlert(true);
       return;
     }
-    // Navigate to Home
-    router.push('/home', 'forward', 'replace');
+
+    try {
+      const studentsRef = ref(db, "students");
+      const newStudentRef = push(studentsRef);
+      await set(newStudentRef, {
+        name: name.trim(),
+        avatarId: selectedAvatar,
+        avatarEmoji: avatars.find(a => a.id === selectedAvatar)?.emoji || '😊',
+        avatarColor: avatars.find(a => a.id === selectedAvatar)?.color || '#e0e0e0',
+        stars: 0,
+        lastLetter: 'A',
+        lastNumber: 1
+      });
+
+      // Set as current user and go to home
+      localStorage.setItem('cerdika_currentUser', newStudentRef.key as string);
+      router.push('/home', 'forward', 'replace');
+    } catch (e) {
+      console.error("Error adding document: ", e);
+      setAlertMessage('Gagal menyambung ke internet. Pastikan koneksi baik.');
+      setShowAlert(true);
+    }
   };
 
   return (
@@ -46,13 +72,13 @@ const Register: React.FC = () => {
 
             <div className="input-group">
               <label>Siapa namamu?</label>
-              <div className="input-wrapper">
-                <input 
-                  type="text" 
-                  placeholder="Ketik namamu di sini" 
+              <div className="input-wrapper custom-input"> {/* Add custom-input class to wrapper if needed for styling */}
+                <IonInput
+                  fill="outline" // Or "solid" or "none" based on desired style
+                  placeholder="Ketik namamu di sini"
                   value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="custom-input"
+                  onIonChange={(e) => setName(e.detail.value!)}
+                  className="ion-text-center" // Center text for better appearance
                 />
               </div>
             </div>
@@ -75,12 +101,20 @@ const Register: React.FC = () => {
             </div>
           </div>
 
-          <button className="start-button" onClick={handleStartLearning}>
+          <IonButton expand="block" className="start-button" onClick={handleStartLearning}>
             Mulai Belajar <IonIcon icon={rocketOutline} />
-          </button>
+          </IonButton>
 
-          <p className="login-text">
-            Sudah punya akun? <a href="#">Masuk di sini</a>
+          <IonAlert
+            isOpen={showAlert}
+            onDidDismiss={() => setShowAlert(false)}
+            header={'Peringatan'}
+            message={alertMessage}
+            buttons={['OK']}
+          />
+
+          <p className="login-text" onClick={() => router.push('/profiles', 'back')} style={{cursor: 'pointer'}}>
+            Kembali ke daftar teman
           </p>
         </div>
       </IonContent>

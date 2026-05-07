@@ -6,7 +6,6 @@ import {
   IonToolbar, 
   IonButtons, 
   IonIcon,
-  IonFooter,
   useIonRouter,
   IonSegment,
   IonSegmentButton,
@@ -14,24 +13,20 @@ import {
   IonModal
 } from '@ionic/react';
 import { 
-  settingsOutline, 
   volumeMediumOutline, 
-  pencilOutline, 
-  playCircleOutline, 
   chevronBackOutline, 
   chevronForwardOutline,
-  homeOutline,
-  libraryOutline,
-  gameControllerOutline,
-  personOutline,
   star,
   happyOutline,
   brushOutline,
   trashOutline,
   gridOutline,
-  sparklesOutline
+  sparklesOutline,
+  arrowBackOutline
 } from 'ionicons/icons';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ref, update } from "firebase/database";
+import { db } from "../firebase";
 import './Learning.css';
 
 const quests = [
@@ -43,9 +38,9 @@ const quests = [
     image: '/assets/images/logo.png',
     bgColor: '#FFF9C4',
     words: [
-      { text: 'APEL', phonetic: 'A-pel', emoji: '🍎' },
-      { text: 'ANGGUR', phonetic: 'Ang-gur', emoji: '🍇' },
-      { text: 'AYAM', phonetic: 'A-yam', emoji: '🐔' }
+      { text: 'APEL', phonetic: 'A-pel', emoji: '🍎', audio: 'apel' },
+      { text: 'ANGGUR', phonetic: 'Ang-gur', emoji: '🍇', audio: 'anggur' },
+      { text: 'AYAM', phonetic: 'A-yam', emoji: '🐔', audio: 'ayam' }
     ],
     funFact: 'Apel itu sehat dan bikin kita kuat!'
   },
@@ -57,9 +52,9 @@ const quests = [
     image: '/assets/images/logo.png',
     bgColor: '#E3F2FD',
     words: [
-      { text: 'BUKU', phonetic: 'Bu-ku', emoji: '📚' },
-      { text: 'BOLA', phonetic: 'Bo-la', emoji: '⚽' },
-      { text: 'BEBEK', phonetic: 'Be-bek', emoji: '🦆' }
+      { text: 'BUKU', phonetic: 'Bu-ku', emoji: '📚', audio: 'buku' },
+      { text: 'BOLA', phonetic: 'Bo-la', emoji: '⚽', audio: 'bola' },
+      { text: 'BEBEK', phonetic: 'Be-bek', emoji: '🦆', audio: 'bebek' }
     ],
     funFact: 'Membaca buku bikin kita jadi pintar!'
   }
@@ -73,9 +68,49 @@ const Learning: React.FC = () => {
   const [praiseText, setPraiseText] = useState('');
   const [isDrawing, setIsDrawing] = useState(false);
   const [showLetterSelector, setShowLetterSelector] = useState(false);
+  const [stars, setStars] = useState(0);
   
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const quest = quests[currentIdx];
+
+  // Load user data
+  useEffect(() => {
+    const loadUser = () => {
+      const currentUserId = localStorage.getItem('cerdika_currentUser');
+      if (currentUserId) {
+        const storedProfiles = localStorage.getItem('cerdika_users');
+        if (storedProfiles) {
+          const profiles = JSON.parse(storedProfiles);
+          const foundUser = profiles.find((p: any) => p.id === currentUserId);
+          if (foundUser) {
+            setStars(foundUser.stars || 0);
+          }
+        }
+      }
+    };
+    loadUser();
+  }, []);
+
+  const addStar = async () => {
+    const currentUserId = localStorage.getItem('cerdika_currentUser');
+    if (currentUserId) {
+      try {
+        const userRef = ref(db, "students/" + currentUserId);
+        const newStars = stars + 1;
+        setStars(newStars);
+        await update(userRef, {
+          stars: newStars,
+          lastLetter: quest.letter
+        });
+      } catch (error) {
+        console.error("Error updating stars/progress:", error);
+      }
+    }
+  };
+
+  if (!quest) {
+    return <IonPage><IonContent><p>No learning content available.</p></IonContent></IonPage>;
+  }
 
   // Canvas Logic
   useEffect(() => {
@@ -141,26 +176,48 @@ const Learning: React.FC = () => {
     }
   };
 
+  const playLetterSound = () => {
+    try {
+      const audio = new Audio(`/assets/audio/huruf_${quest.letter.toLowerCase()}.mp3`);
+      audio.play().catch(e => console.log("Audio huruf belum ada.", e));
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   const playWord = (word: any) => {
     setPraiseText(`Hebat! ${word.text}`);
     setShowPraise(true);
     setTimeout(() => setShowPraise(false), 1500);
+
+    try {
+      const audio = new Audio(`/assets/audio/kata_${word.audio}.mp3`);
+      audio.play().catch(e => console.log("Audio kata belum ada.", e));
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const handleFinishTracing = () => {
+    addStar();
+    setPraiseText("Tulisanmu Bagus Banget!");
+    setShowPraise(true);
+    setTimeout(() => setShowPraise(false), 2000);
   };
 
   return (
     <IonPage>
       <IonHeader className="ion-no-border app-header">
         <IonToolbar className="app-toolbar">
-          <div className="header-content">
-            <div className="header-logo-box">
-              <span>🦁</span>
-            </div>
-            <div className="header-text-info">
-              <span className="header-app-name">Cerdika</span>
-              <div className="header-badge-row">
-                <IonIcon icon={star} color="warning" />
-                <span className="badge-text">120 Bintang</span>
-              </div>
+          <IonButtons slot="start">
+            <button className="header-action-btn" onClick={() => router.push('/home', 'back')}>
+              <IonIcon icon={arrowBackOutline} />
+            </button>
+          </IonButtons>
+          <div className="header-content" style={{justifyContent: 'center', flex: 1}}>
+            <div className="header-badge-row">
+              <IonIcon icon={star} color="warning" style={{fontSize: '1.5rem'}} />
+              <span className="badge-text" style={{fontSize: '1.2rem', fontWeight: 'bold'}}>{stars}</span>
             </div>
           </div>
           <IonButtons slot="end">
@@ -206,6 +263,7 @@ const Learning: React.FC = () => {
                     <motion.div 
                       className="letter-box"
                       whileTap={{ scale: 0.9 }}
+                      onClick={playLetterSound}
                     >
                       <span style={{ color: '#1c1c1c' }}>{quest.letter}</span>
                       <button className="sound-pulse">
@@ -286,11 +344,7 @@ const Learning: React.FC = () => {
                       <IonIcon icon={trashOutline} />
                       <span>Hapus</span>
                     </button>
-                    <button className="control-btn done" onClick={() => {
-                      setPraiseText("Tulisanmu Bagus Banget!");
-                      setShowPraise(true);
-                      setTimeout(() => setShowPraise(false), 2000);
-                    }}>
+                    <button className="control-btn done" onClick={handleFinishTracing}>
                       <IonIcon icon={happyOutline} />
                       <span>Selesai</span>
                     </button>
@@ -369,45 +423,6 @@ const Learning: React.FC = () => {
           )}
         </AnimatePresence>
       </IonContent>
-
-      <IonFooter className="ion-no-border home-footer">
-        <div className="nav-bar">
-          <motion.div 
-            className="nav-item" 
-            whileTap={{ scale: 0.9 }}
-            onClick={() => router.push('/home')}
-          >
-            <IonIcon icon={homeOutline} />
-            <span>Beranda</span>
-          </motion.div>
-          <motion.div 
-            className="nav-item active" 
-            initial={false}
-            animate={{ y: -5 }}
-            onClick={() => router.push('/learning')}
-          >
-            <IonIcon icon={libraryOutline} />
-            <span>Belajar</span>
-            <motion.div className="nav-indicator" layoutId="nav-indicator" />
-          </motion.div>
-          <motion.div 
-            className="nav-item" 
-            whileTap={{ scale: 0.9 }}
-            onClick={() => router.push('/games')}
-          >
-            <IonIcon icon={gameControllerOutline} />
-            <span>Bermain</span>
-          </motion.div>
-          <motion.div 
-            className="nav-item" 
-            whileTap={{ scale: 0.9 }}
-            onClick={() => router.push('/profile')}
-          >
-            <IonIcon icon={personOutline} />
-            <span>Profil</span>
-          </motion.div>
-        </div>
-      </IonFooter>
     </IonPage>
   );
 };

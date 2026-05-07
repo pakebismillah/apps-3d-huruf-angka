@@ -7,6 +7,7 @@ import Home from './pages/Home';
 import Learning from './pages/Learning';
 import Games from './pages/Games';
 import Profile from './pages/Profile';
+import Profiles from './pages/Profiles';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -62,8 +63,11 @@ const App: React.FC = () => (
         <Route exact path="/profile">
           <Profile />
         </Route>
+        <Route exact path="/profiles">
+          <Profiles />
+        </Route>
         <Route exact path="/">
-          <Redirect to="/loading" />
+          <Redirect to="/profiles" />
         </Route>
       </IonRouterOutlet>
     </IonReactRouter>
