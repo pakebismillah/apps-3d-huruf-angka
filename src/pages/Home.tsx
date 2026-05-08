@@ -17,7 +17,10 @@ import {
   homeOutline,
   libraryOutline,
   gameControllerOutline,
-  personOutline
+  personOutline,
+  lockClosedOutline,
+  leafOutline,
+  pawOutline
 } from 'ionicons/icons';
 import { motion } from 'framer-motion';
 import { ref, onValue } from "firebase/database";
@@ -144,6 +147,68 @@ const Home: React.FC = () => {
                     <IonIcon icon={calculatorOutline} />
                   </div>
                   <span className="illust-text">3</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Card 3: Buah (Unlockable) */}
+            <div 
+              className={`learning-card card-green ${user.stars < 50 ? 'locked' : ''}`} 
+              onClick={() => user.stars >= 50 && router.push('/learning/fruits')}
+            >
+              <div className="card-top">
+                <span className="card-badge">Pengetahuan</span>
+                <div className="card-mini-icon">
+                  <IonIcon icon={user.stars < 50 ? lockClosedOutline : leafOutline} />
+                </div>
+              </div>
+              <h2 className="card-title">Mengenal Buah</h2>
+              {user.stars < 50 ? (
+                <div className="lock-info">
+                  <IonIcon icon={lockClosedOutline} />
+                  <span>Butuh 50 Bintang</span>
+                </div>
+              ) : (
+                <p className="card-desc">Mari cari tahu nama buah-buahan segar!</p>
+              )}
+              <div className="card-illustration illust-green">
+                <div className="illust-content">
+                  <span className="illust-text">🍎</span>
+                  <div className="illust-center-icon">
+                    <IonIcon icon={leafOutline} />
+                  </div>
+                  <span className="illust-text">🍌</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Card 4: Hewan (Unlockable) */}
+            <div 
+              className={`learning-card card-red ${user.stars < 100 ? 'locked' : ''}`} 
+              onClick={() => user.stars >= 100 && router.push('/learning/animals')}
+            >
+              <div className="card-top">
+                <span className="card-badge">Pengetahuan</span>
+                <div className="card-mini-icon">
+                  <IonIcon icon={user.stars < 100 ? lockClosedOutline : pawOutline} />
+                </div>
+              </div>
+              <h2 className="card-title">Dunia Hewan</h2>
+              {user.stars < 100 ? (
+                <div className="lock-info">
+                  <IonIcon icon={lockClosedOutline} />
+                  <span>Butuh 100 Bintang</span>
+                </div>
+              ) : (
+                <p className="card-desc">Petualangan seru mengenal teman hewan!</p>
+              )}
+              <div className="card-illustration illust-red">
+                <div className="illust-content">
+                  <span className="illust-text">🦁</span>
+                  <div className="illust-center-icon">
+                    <IonIcon icon={pawOutline} />
+                  </div>
+                  <span className="illust-text">🦒</span>
                 </div>
               </div>
             </div>

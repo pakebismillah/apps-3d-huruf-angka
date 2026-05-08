@@ -287,6 +287,8 @@
 
 .card-yellow { background-color: #FFD54F; }
 .card-blue { background-color: #64B5F6; }
+.card-green { background-color: #E8F5E9; border-color: #2E7D32; }
+.card-red { background-color: #FFEBEE; border-color: #C62828; }
 
 .card-top {
   display: flex;
@@ -339,10 +341,56 @@
   justify-content: center;
 }
 
+.illust-yellow { background-color: #FFF9C4; }
+.illust-blue { background-color: #E3F2FD; }
+.illust-green { background-color: #C8E6C9; }
+.illust-red { background-color: #FFCDD2; }
+
+.illust-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.illust-center-icon {
+  font-size: 24px;
+  color: #1c1c1c;
+  opacity: 0.5;
+}
+
 .illust-text {
   font-size: 50px;
   font-weight: 900;
   color: #1c1c1c;
+}
+
+.learning-card.locked {
+  background-color: #f5f5f5 !important;
+  border-color: #9e9e9e !important;
+  box-shadow: 4px 4px 0px #9e9e9e;
+  filter: grayscale(1);
+  opacity: 0.8;
+  cursor: not-allowed;
+}
+
+.lock-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #1c1c1c;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-weight: 800;
+  font-size: 13px;
+  width: fit-content;
+  margin-bottom: 10px;
+}
+
+.lock-info ion-icon {
+  font-size: 16px;
+  color: #FFD54F;
 }
 
 /* Progress Section */

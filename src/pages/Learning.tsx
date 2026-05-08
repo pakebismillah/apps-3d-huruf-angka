@@ -224,7 +224,59 @@ const quests: Quest[] = [
       type: 'Angka',
       category: 'numbers'
     };
-  })
+  }),
+  // Fruits
+  { 
+    id: 'apel', letter: 'Apel', smallLetter: '🍎', title: 'APEL MERAH', subtitle: 'Apel rasanya manis!', bgColor: '#FFEBEE',
+    words: [{ text: 'APEL', phonetic: 'A-pel', emoji: '🍎', audio: 'apel', type: 'Buah' }],
+    funFact: 'Apel bisa berwarna merah, hijau, atau kuning!', type: 'Buah', category: 'fruits'
+  },
+  { 
+    id: 'pisang', letter: 'Pisang', smallLetter: '🍌', title: 'PISANG KUNING', subtitle: 'Monyet suka pisang!', bgColor: '#FFFDE7',
+    words: [{ text: 'PISANG', phonetic: 'Pi-sang', emoji: '🍌', audio: 'pisang', type: 'Buah' }],
+    funFact: 'Pisang mengandung banyak kalium yang baik!', type: 'Buah', category: 'fruits'
+  },
+  { 
+    id: 'jeruk', letter: 'Jeruk', smallLetter: '🍊', title: 'JERUK SEGAR', subtitle: 'Jeruk banyak vitamin C!', bgColor: '#FFF3E0',
+    words: [{ text: 'JERUK', phonetic: 'Je-ruk', emoji: '🍊', audio: 'jeruk', type: 'Buah' }],
+    funFact: 'Jeruk bikin tubuh kita tidak gampang sakit!', type: 'Buah', category: 'fruits'
+  },
+  { 
+    id: 'semangka', letter: 'Semangka', smallLetter: '🍉', title: 'SEMANGKA BESAR', subtitle: 'Isinya air yang segar!', bgColor: '#E8F5E9',
+    words: [{ text: 'SEMANGKA', phonetic: 'Se-mang-ka', emoji: '🍉', audio: 'semangka', type: 'Buah' }],
+    funFact: 'Semangka itu 90% isinya adalah air!', type: 'Buah', category: 'fruits'
+  },
+  { 
+    id: 'mangga', letter: 'Mangga', smallLetter: '🥭', title: 'MANGGA MANIS', subtitle: 'Wangi dan enak sekali!', bgColor: '#FFF9C4',
+    words: [{ text: 'MANGGA', phonetic: 'Mang-ga', emoji: '🥭', audio: 'mangga', type: 'Buah' }],
+    funFact: 'Mangga adalah buah favorit di banyak negara!', type: 'Buah', category: 'fruits'
+  },
+  // Animals
+  { 
+    id: 'kucing', letter: 'Kucing', smallLetter: '🐱', title: 'KUCING LUCU', subtitle: 'Meong... meong...', bgColor: '#F5F5F5',
+    words: [{ text: 'KUCING', phonetic: 'Ku-cing', emoji: '🐱', audio: 'kucing', type: 'Hewan' }],
+    funFact: 'Kucing suka tidur sepanjang hari!', type: 'Hewan', category: 'animals'
+  },
+  { 
+    id: 'singa', letter: 'Singa', smallLetter: '🦁', title: 'SINGA BERANI', subtitle: 'Aummm... Raja Hutan!', bgColor: '#FFF3E0',
+    words: [{ text: 'SINGA', phonetic: 'Si-nga', emoji: '🦁', audio: 'singa', type: 'Hewan' }],
+    funFact: 'Singa jantan punya rambut yang lebat!', type: 'Hewan', category: 'animals'
+  },
+  { 
+    id: 'gajah', letter: 'Gajah', smallLetter: '🐘', title: 'GAJAH BESAR', subtitle: 'Punya belalai panjang!', bgColor: '#E1F5FE',
+    words: [{ text: 'GAJAH', phonetic: 'Ga-jah', emoji: '🐘', audio: 'gajah', type: 'Hewan' }],
+    funFact: 'Gajah adalah hewan darat paling besar!', type: 'Hewan', category: 'animals'
+  },
+  { 
+    id: 'jerapah', letter: 'Jerapah', smallLetter: '🦒', title: 'JERAPAH TINGGI', subtitle: 'Lehernya panjang sekali!', bgColor: '#FFFDE7',
+    words: [{ text: 'JERAPAH', phonetic: 'Je-ra-pah', emoji: '🦒', audio: 'jerapah', type: 'Hewan' }],
+    funFact: 'Jerapah bisa tidur sambil berdiri!', type: 'Hewan', category: 'animals'
+  },
+  { 
+    id: 'monyet', letter: 'Monyet', smallLetter: '🐒', title: 'MONYET CERDIK', subtitle: 'Suka panjat pohon!', bgColor: '#EFEBE9',
+    words: [{ text: 'MONYET', phonetic: 'Mo-nyet', emoji: '🐒', audio: 'monyet', type: 'Hewan' }],
+    funFact: 'Monyet menggunakan ekornya untuk keseimbangan!', type: 'Hewan', category: 'animals'
+  }
 ];
 
 
