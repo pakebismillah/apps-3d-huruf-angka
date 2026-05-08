@@ -164,6 +164,8 @@ const Games: React.FC = () => {
         .slice(0, 10); // Pick 10
       setShuffledQuestions(shuffled);
       setCurrentIdx(0);
+    } else {
+        setShuffledQuestions([]);
     }
   }, [gameMode]);
 
@@ -175,7 +177,7 @@ const Games: React.FC = () => {
       }, 500);
       return () => clearTimeout(timer);
     }
-  }, [gameMode, currentIdx]);
+  }, [gameMode, currentIdx, q]); 
 
   const handleSelect = (opt: string) => {
     if (status !== 'idle') return;
@@ -195,6 +197,8 @@ const Games: React.FC = () => {
   };
 
   const nextQuestion = () => {
+    if (questions.length === 0) return;
+    
     if (currentIdx < questions.length - 1) {
       setCurrentIdx(c => c + 1);
       setSelected(null);
@@ -252,7 +256,6 @@ const Games: React.FC = () => {
             </div>
             
             <div className="header-right">
-              {/* Settings button removed/replaced per user pattern request */}
             </div>
           </div>
         </IonToolbar>
