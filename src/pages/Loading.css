@@ -1,158 +1,157 @@
-.loading-content {
-  --background: #FFD740;
+.loading-content-v2 {
+  --background: #fbd63c; 
 }
 
-.loading-container {
+.loading-screen-v2 {
   width: 100%;
   height: 100%;
   position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   overflow: hidden;
-}
-
-.circle {
-  position: absolute;
-  border-radius: 50%;
-}
-
-.circle-top-left {
-  width: 150px;
-  height: 150px;
-  background-color: #A5D6A7;
-  top: -30px;
-  left: -30px;
-  border: 4px solid #1c1c1c;
-}
-
-.circle-top-right {
-  width: 60px;
-  height: 60px;
-  background-color: #d6a928;
-  top: 60px;
-  right: 40px;
-}
-
-.circle-bottom-right {
-  width: 250px;
-  height: 250px;
-  background-color: #A5D6A7;
-  bottom: -50px;
-  right: -50px;
-  border: 4px solid #1c1c1c;
-}
-
-.logo-container {
-  position: relative;
-  margin-bottom: 20px;
-  z-index: 10;
-}
-
-.logo-badge {
-  width: 180px;
-  height: 180px;
-  background-color: white;
-  border-radius: 50%;
-  border: 6px solid #1c1c1c;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  position: relative;
-  z-index: 2;
+  background-color: #fbd63c;
+  /* Add subtle dot pattern */
+  background-image: radial-gradient(#1c1c1c 1px, transparent 1px);
+  background-size: 25px 25px;
+  background-opacity: 0.05;
 }
 
-.logo-shadow {
+.loading-screen-v2::before {
+  content: '';
   position: absolute;
-  width: 180px;
-  height: 180px;
-  background-color: #1c1c1c;
-  border-radius: 50%;
-  top: 10px;
-  left: 5px;
-  z-index: 1;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(251, 214, 60, 0.9); /* Overlay to make dots subtle */
+  z-index: 0;
 }
 
-.logo-image {
+.corner-blob {
+  position: absolute;
+  border-radius: 50%;
+  z-index: 1;
+  border: 3px solid #1c1c1c; /* Reference shows borders on blobs */
+}
+
+.top-left {
+  width: 200px;
+  height: 200px;
+  background: #9db28b;
+  top: -60px;
+  left: -80px;
+}
+
+.top-right {
   width: 80px;
   height: 80px;
-  object-fit: contain;
-  margin-bottom: 5px;
+  background: #cba833;
+  top: 18%;
+  right: 12%;
 }
 
-.logo-text {
-  font-family: 'Inter', sans-serif;
-  font-weight: 800;
-  font-size: 14px;
-  color: #F9A825;
-  text-align: center;
-  line-height: 1.1;
+.bottom-right {
+  width: 300px;
+  height: 300px;
+  background: #9bd267;
+  bottom: -80px;
+  right: -60px;
 }
 
-.brand-title {
-  font-family: 'Inter', sans-serif;
-  font-weight: 900;
-  font-size: 42px;
-  color: white;
-  text-shadow: 
-    -2px -2px 0 #1c1c1c,  
-     2px -2px 0 #1c1c1c,
-    -2px  2px 0 #1c1c1c,
-     2px  2px 0 #1c1c1c,
-     0px  4px 0 #1c1c1c;
-  margin-top: 10px;
-  margin-bottom: 30px;
-  letter-spacing: 2px;
+.loading-main-v2 {
   z-index: 10;
-}
-
-.progress-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  z-index: 10;
-  width: 70%;
-  max-width: 300px;
+  width: 90%;
+  max-width: 320px;
+  margin-top: -80px;
 }
 
-.progress-bar-outline {
-  width: 100%;
-  height: 24px;
-  background-color: white;
-  border: 3px solid #1c1c1c;
-  border-radius: 12px;
-  overflow: hidden;
+/* Badge Styling */
+.logo-placeholder-v2 {
+  margin-bottom: 80px;
   position: relative;
-  box-shadow: 0px 4px 0px #1c1c1c;
 }
 
-.progress-bar-fill {
-  height: 100%;
-  background-color: #69F0AE;
-  border-right: 2px solid #1c1c1c;
-  transition: width 0.1s linear;
-}
-
-.loading-text {
-  margin-top: 15px;
-  font-family: 'Inter', sans-serif;
-  font-weight: 700;
-  color: white;
-  font-size: 16px;
+.logo-circle-v2 {
+  width: 240px;
+  height: 240px;
+  background: #fbd63c;
+  border: 12px solid #1c1c1c;
+  border-radius: 50%;
   display: flex;
   align-items: center;
-  gap: 5px;
-  text-shadow: 1px 1px 0px #1c1c1c, -1px -1px 0px #1c1c1c, 1px -1px 0px #1c1c1c, -1px 1px 0px #1c1c1c;
+  justify-content: center;
+  box-shadow: 15px 15px 0px #1c1c1c; /* Heavy offset shadow from reference */
+  position: relative;
 }
 
-.spinner-icon {
+.logo-inner-ring {
+  width: 190px;
+  height: 190px;
+  background: #fbd63c;
+  border: 4px solid #1c1c1c;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* Add subtle inner grid as seen in image */
+  background-image: linear-gradient(rgba(28,28,28,0.1) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(28,28,28,0.1) 1px, transparent 1px);
+  background-size: 10px 10px;
+}
+
+.brand-text-v2 {
+  font-family: 'Arial Black', sans-serif;
+  font-size: 2.2rem;
+  color: white;
+  text-transform: uppercase;
+  -webkit-text-stroke: 4px #1c1c1c;
+  paint-order: stroke fill;
+  margin-top: 60px; /* Leave space for squirrel logo later */
+  letter-spacing: -1px;
+}
+
+/* Progress Bar */
+.bar-container-v2 {
+  width: 100%;
+  height: 36px;
+  background: white;
+  border: 6px solid #1c1c1c;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0px 4px 0px rgba(0,0,0,0.1);
+  margin-bottom: 30px;
+}
+
+.bar-fill-v2 {
+  height: 100%;
+  background: #69f0ae;
+  border-right: 5px solid #1c1c1c;
+  transition: width 0.3s ease;
+}
+
+.loading-label-v2 {
+  color: white;
+  font-weight: 900;
+  font-size: 1.3rem;
+  text-shadow: 2px 2px 0px #1c1c1c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.loading-label-v2 span {
+  display: inline-block;
   animation: spin 2s linear infinite;
+  opacity: 0.8;
 }
 
 @keyframes spin {
-  100% {
-    transform: rotate(360deg);
-  }
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }

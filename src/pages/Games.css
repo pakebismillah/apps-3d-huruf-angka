@@ -1,3 +1,102 @@
+/* Innovative Header V2 for Games */
+.app-header-v2 {
+  --background: transparent;
+  background: transparent;
+  padding: 12px 16px;
+  position: absolute;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+}
+
+.app-toolbar-v2 {
+  --background: rgba(255, 255, 255, 0.8);
+  --padding-top: 0;
+  --padding-bottom: 0;
+  --padding-start: 12px;
+  --padding-end: 12px;
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.header-container-v2 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 60px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-circle-v2 {
+  width: 44px;
+  height: 44px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.logo-emoji {
+  font-size: 24px;
+}
+
+.brand-info-v2 {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-name-v2 {
+  font-family: 'Inter', sans-serif;
+  font-weight: 900;
+  font-size: 18px;
+  margin: 0;
+  color: #1c1c1c;
+}
+
+.stars-pill-v2 {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #FFF9C4;
+  padding: 2px 8px;
+  border-radius: 8px;
+  margin-top: 2px;
+}
+
+.stars-pill-v2 ion-icon {
+  color: #FBC02D;
+  font-size: 12px;
+}
+
+.stars-pill-v2 span {
+  font-size: 10px;
+  font-weight: 800;
+  color: #1c1c1c;
+}
+
+.header-action-btn-v2 {
+  width: 40px;
+  height: 40px;
+  background: white;
+  border: 2px solid #f0f0f0;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: #1c1c1c;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
 .games-content {
   --background: #f0fdf4;
   background-image: radial-gradient(#69F0AE 0.5px, #f0fdf4 0.5px);
@@ -6,6 +105,7 @@
 
 .games-wrapper {
   padding: 20px;
+  padding-top: 85px; /* Offset for floating header */
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -60,8 +160,8 @@
 
 /* Options Grid */
 .options-grid {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 15px;
   padding: 10px 0;
 }
@@ -70,7 +170,7 @@
   background: white;
   border: 4px solid #1c1c1c;
   border-radius: 30px;
-  height: 160px;
+  height: 120px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -86,7 +186,7 @@
 }
 
 .option-text {
-  font-size: 80px;
+  font-size: 60px;
   font-weight: 900;
   color: #1c1c1c;
 }
@@ -207,3 +307,158 @@
   font-size: 14px;
   color: #d6a928;
 }
+/* Mode Selection Screen */
+.mode-selection-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.mode-title {
+  font-size: 28px;
+  font-weight: 900;
+  color: #1c1c1c;
+  margin-bottom: 5px;
+}
+
+.mode-subtitle {
+  font-size: 16px;
+  color: #666;
+  font-weight: 700;
+  margin-bottom: 30px;
+}
+
+.mode-options {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.mode-card {
+  background: white;
+  border: 4px solid #1c1c1c;
+  border-radius: 30px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  box-shadow: 6px 6px 0 #1c1c1c;
+  cursor: pointer;
+  text-align: left;
+}
+
+.mode-card:active {
+  transform: translate(2px, 2px);
+  box-shadow: 4px 4px 0 #1c1c1c;
+}
+
+.card-letters {
+  background: #FFF9C4;
+}
+
+.card-numbers {
+  background: #E3F2FD;
+}
+
+.mode-icon-box {
+  width: 70px;
+  height: 70px;
+  background: white;
+  border: 3px solid #1c1c1c;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mode-emoji {
+  font-size: 24px;
+  font-weight: 900;
+  color: #1c1c1c;
+}
+
+.mode-text-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.mode-card-title {
+  font-size: 22px;
+  font-weight: 900;
+  color: #1c1c1c;
+  margin: 0;
+}
+
+.mode-card-desc {
+  font-size: 14px;
+  font-weight: 700;
+  color: #555;
+  margin: 4px 0 0 0;
+}
+/* INNOVATIVE FLOATING NAV BAR */
+.home-footer {
+  background: transparent;
+  padding: 0 20px 25px;
+}
+
+.nav-bar {
+  background: white;
+  border: 4px solid #1c1c1c;
+  border-radius: 30px;
+  height: 85px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  box-shadow: 0 8px 0 #1c1c1c;
+  position: relative;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: #1c1c1c;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  z-index: 2;
+}
+
+.nav-item ion-icon {
+  font-size: 28px;
+  transition: all 0.3s;
+}
+
+.nav-item span {
+  font-size: 11px;
+  font-weight: 900;
+  opacity: 1;
+  transition: all 0.3s;
+}
+
+.nav-item.active {
+  transform: translateY(-28px);
+}
+
+.nav-item.active ion-icon {
+  font-size: 35px;
+  background: #64B5F6; /* Games Blue */
+  border: 4px solid #1c1c1c;
+  border-radius: 50%;
+  padding: 12px;
+  box-shadow: 6px 6px 0 #1c1c1c;
+}
+
+.nav-item.active span {
+  color: #1c1c1c;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+/* Page specific active colors */
+.nav-item:nth-child(1).active ion-icon { background: #FFD54F; }
+.nav-item:nth-child(3).active ion-icon { background: #81C784; }

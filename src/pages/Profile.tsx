@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   IonContent, 
   IonPage, 
@@ -26,37 +26,90 @@ import {
   rocketOutline,
   sparklesOutline
 } from 'ionicons/icons';
+import { ref, onValue, update } from "firebase/database";
+import { db } from "../firebase";
 import { motion } from 'framer-motion';
 import './Profile.css';
 
 const Profile: React.FC = () => {
   const router = useIonRouter();
   const [showBadgeInfo, setShowBadgeInfo] = useState<any>(null);
+  const [user, setUser] = useState<any>(null);
+
+  const [showAvatarSelector, setShowAvatarSelector] = useState(false);
+  const avatars = ['🐱', '🦁', '🐶', '🐰', '🐼', '🐯', '🐨', '🐸', '🐷', '🐵', '🦊', '🦒'];
+
+  const updateAvatar = async (emoji: string) => {
+    const currentUserId = localStorage.getItem('cerdika_currentUser');
+    if (currentUserId) {
+      const userRef = ref(db, "students/" + currentUserId);
+      await update(userRef, { avatarEmoji: emoji });
+      setShowAvatarSelector(false);
+    }
+  };
+
+  useEffect(() => {
+    const currentUserId = localStorage.getItem('cerdika_currentUser');
+    if (currentUserId) {
+      const userRef = ref(db, "students/" + currentUserId);
+      const unsub = onValue(userRef, (snapshot) => {
+        if (snapshot.exists()) {
+          setUser({ id: snapshot.key, ...snapshot.val() });
+        }
+      });
+      return () => unsub();
+    }
+  }, []);
+
+  const completedQuests = user?.completedQuests || [];
+  const letterCount = completedQuests.filter((q: string) => q.startsWith('letters_')).length;
+  const numberCount = completedQuests.filter((q: string) => q.startsWith('numbers_')).length;
+  const level = Math.floor((user?.stars || 0) / 50) + 1;
 
   const badges = [
-    { id: 1, name: 'Bintang Pertama', icon: sparklesOutline, color: '#FFD54F', desc: 'Kamu sudah memulai perjalananmu!', locked: false },
-    { id: 2, name: 'Penerjang Cilik', icon: rocketOutline, color: '#69F0AE', desc: 'Selesaikan 5 level bermain.', locked: false },
-    { id: 3, name: 'Pembaca Rajin', icon: bookOutline, color: '#64B5F6', desc: 'Baca 10 huruf tanpa salah.', locked: false },
-    { id: 4, name: 'Si Ahli Angka', icon: medalOutline, color: '#E0E0E0', desc: 'Belajar semua angka 1-10.', locked: true },
-    { id: 5, name: 'Penulis Cilik', icon: lockClosedOutline, color: '#E0E0E0', desc: 'Latih tulisan tanganmu.', locked: true },
-    { id: 6, name: 'Sang Juara', icon: trophyOutline, color: '#E0E0E0', desc: 'Dapatkan semua bintang emas.', locked: true }
+    { id: 1, name: 'Bintang Pertama', icon: sparklesOutline, color: '#FFD54F', desc: 'Kamu sudah memulai perjalananmu!', locked: (user?.stars || 0) < 5 },
+    { id: 2, name: 'Penerjang Cilik', icon: rocketOutline, color: '#69F0AE', desc: 'Dapatkan 100 bintang bermain.', locked: (user?.stars || 0) < 100 },
+    { id: 3, name: 'Pembaca Rajin', icon: bookOutline, color: '#64B5F6', desc: 'Selesaikan 10 huruf alfabet.', locked: letterCount < 10 },
+    { id: 4, name: 'Si Ahli Angka', icon: medalOutline, color: '#FFD54F', desc: 'Belajar 10 angka pertama.', locked: numberCount < 10 },
+    { id: 5, name: 'Penulis Cilik', icon: sparklesOutline, color: '#FFD54F', desc: 'Selesaikan 20 tugas menulis.', locked: completedQuests.length < 20 },
+    { id: 6, name: 'Sang Juara', icon: trophyOutline, color: '#FFD54F', desc: 'Kumpulkan 500 bintang emas.', locked: (user?.stars || 0) < 500 }
   ];
+
+  // ... (JSX changes below)
+
+  const handleLogout = () => {
+    localStorage.removeItem('cerdika_currentUser');
+    router.push('/profiles', 'root', 'replace'); // Confirming '/profiles' is correct for account switching
+  };
 
   return (
     <IonPage>
-      <IonHeader className="ion-no-border profile-header">
-        <IonToolbar className="profile-toolbar">
-          <div className="header-brand">
-            <div className="brand-logo-container">
-              <img src="/assets/images/logo.png" alt="Logo" />
+      <IonHeader className="ion-no-border app-header-v2">
+        <IonToolbar className="app-toolbar-v2">
+          <div className="header-container-v2">
+            <div className="header-left">
+              <div className="logo-circle-v2" style={{backgroundColor: user?.avatarColor || '#64B5F6'}}>
+                <span className="logo-emoji">{user?.avatarEmoji || '👤'}</span>
+              </div>
+              <div className="brand-info-v2">
+                <h2 className="brand-name-v2">{user?.name || 'Profil'}</h2>
+                <div className="stars-pill-v2">
+                  <IonIcon icon={star} />
+                  <span>{user?.stars || 0} Bintang</span>
+                </div>
+              </div>
             </div>
-            <span className="brand-name">Cerdika</span>
+            
+            <div className="header-right">
+              <motion.button 
+                className="header-logout-btn-v2"
+                whileTap={{ scale: 0.9 }}
+                onClick={handleLogout}
+              >
+                 Keluar
+              </motion.button>
+            </div>
           </div>
-          <IonButtons slot="end">
-            <button className="header-btn settings">
-              <IonIcon icon={settingsOutline} />
-            </button>
-          </IonButtons>
         </IonToolbar>
       </IonHeader>
 
@@ -70,108 +123,123 @@ const Profile: React.FC = () => {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
           >
+
             <div className="avatar-section">
-              <div className="avatar-circle">
-                <img src="/assets/images/logo.png" alt="Profile Avatar" />
+              <div className="avatar-circle" style={{ backgroundColor: user?.avatarColor || '#fff9c4' }}>
+                <span style={{ fontSize: '4rem' }}>{user?.avatarEmoji || '👤'}</span>
               </div>
-              <div className="edit-avatar">
+              <motion.div 
+                className="edit-avatar" 
+                whileTap={{ scale: 0.9 }}
+                onClick={() => setShowAvatarSelector(true)}
+              >
                 <IonIcon icon={colorPaletteOutline} />
-              </div>
+              </motion.div>
             </div>
             
-            <h2 className="user-greeting">Halo, Si Pintar!</h2>
+            <h2 className="user-greeting">Halo, {user?.name || 'Si Pintar'}!</h2>
             <p className="user-motivation">Kamu sudah belajar banyak hal luar biasa hari ini.</p>
             
             <div className="stats-pills">
-              <div className="stat-pill level">Level 5</div>
-              <div className="stat-pill xp">120 Bintang</div>
+              <div className="stat-pill level">Level {level}</div>
+              <div className="stat-pill xp">{user?.stars || 0} Bintang</div>
             </div>
           </motion.div>
 
           {/* Progress Section */}
           <div className="section-group">
-            <h3 className="section-title">Progres Belajar</h3>
+            <h3 className="section-title">Aktivitas Terakhir</h3>
             
-            <div className="progress-card">
+            <motion.div 
+              className="progress-card actionable"
+              whileTap={{ scale: 0.98 }}
+              onClick={() => {
+                if (user?.lastLetter) {
+                  router.push(`/learning/letters?id=${user.lastLetter}`);
+                } else {
+                  router.push('/learning/letters');
+                }
+              }}
+            >
               <div className="progress-header">
-                <span className="label">Huruf yang Dikuasai</span>
-                <span className="value">10/26</span>
+                <span className="label">Huruf Terakhir</span>
+                <span className="value-highlight">{user?.lastLetter || 'Kosong'}</span>
               </div>
               <div className="progress-bar-bg">
                 <motion.div 
                   className="progress-bar-fill yellow"
                   initial={{ width: 0 }}
-                  animate={{ width: '38%' }}
+                  animate={{ width: `${(letterCount / 26) * 100}%` }}
                 />
               </div>
-              <p className="progress-hint">Ayo semangat belajar alfabet!</p>
-            </div>
+              <p className="progress-hint">
+                {letterCount > 0 ? `Sudah mempelajari ${letterCount} huruf!` : 'Ayo mulai belajar huruf pertama!'}
+              </p>
+            </motion.div>
 
-            <div className="progress-card">
+            <motion.div 
+              className="progress-card actionable"
+              whileTap={{ scale: 0.98 }}
+              onClick={() => {
+                if (user?.lastNumber) {
+                  router.push(`/learning/numbers?id=${user.lastNumber}`);
+                } else {
+                  router.push('/learning/numbers');
+                }
+              }}
+            >
               <div className="progress-header">
-                <span className="label">Angka yang Dikuasai</span>
-                <span className="value">5/10</span>
+                <span className="label">Angka Terakhir</span>
+                <span className="value-highlight">{user?.lastNumber || 'Kosong'}</span>
               </div>
               <div className="progress-bar-bg">
                 <motion.div 
                   className="progress-bar-fill green"
                   initial={{ width: 0 }}
-                  animate={{ width: '50%' }}
+                  animate={{ width: `${(numberCount / 50) * 100}%` }}
                 />
               </div>
-              <p className="progress-hint">Hebat! Kamu sudah separuh jalan.</p>
-            </div>
+              <p className="progress-hint">
+                {numberCount > 0 ? `Sudah mempelajari ${numberCount} angka!` : 'Ayo mulai berhitung hari ini!'}
+              </p>
+            </motion.div>
           </div>
 
-          {/* Badges Section */}
-          <div className="section-group">
-            <div className="section-header-flex">
-              <h3 className="section-title">Lencana Hebat</h3>
-              <button className="text-link">Lihat Semua</button>
-            </div>
-            
-            <div className="badges-grid">
-              {badges.map((badge) => (
-                <div 
-                  key={badge.id} 
-                  className={`badge-item ${badge.locked ? 'locked' : ''}`}
-                  onClick={() => setShowBadgeInfo(badge)}
-                >
-                  <div className="badge-icon-box" style={{ backgroundColor: badge.color }}>
-                    <IonIcon icon={badge.icon} />
-                  </div>
-                  <span className="badge-name">{badge.locked ? 'Terkunci' : badge.name}</span>
-                </div>
-              ))}
-            </div>
+          {/* Logout Button in Content Area */}
+          <div className="logout-section">
+            <button className="full-logout-btn" onClick={handleLogout}>
+              <IonIcon icon={personOutline} style={{ marginRight: '8px' }} />
+              Keluar dari Profil
+            </button>
+            <p className="logout-hint">Sampai jumpa lagi, Si Pintar!</p>
           </div>
         </div>
-
-        {/* Badge Info Modal */}
+        {/* Avatar Selector Modal */}
         <IonModal 
-          isOpen={!!showBadgeInfo} 
-          onDidDismiss={() => setShowBadgeInfo(null)}
-          className="badge-modal"
+          isOpen={showAvatarSelector} 
+          onDidDismiss={() => setShowAvatarSelector(false)}
+          className="avatar-modal"
           breakpoints={[0, 0.4]}
           initialBreakpoint={0.4}
         >
-          <div className="badge-modal-content">
-            <div className="modal-handle"></div>
-            {showBadgeInfo && (
-              <div className="modal-inner">
-                <div className="modal-icon-box" style={{ backgroundColor: showBadgeInfo.color }}>
-                  <IonIcon icon={showBadgeInfo.icon} />
-                </div>
-                <h3>{showBadgeInfo.name}</h3>
-                <p>{showBadgeInfo.desc}</p>
-                {showBadgeInfo.locked ? (
-                  <div className="lock-info">Teruslah belajar untuk membuka ini!</div>
-                ) : (
-                  <div className="earned-info">Dikuasai pada 5 Mei 2026</div>
-                )}
-                <IonButton expand="block" fill="clear" onClick={() => setShowBadgeInfo(null)}>Tutup</IonButton>
+          <div className="modal-content-v2">
+            <div className="modal-handle-v2"></div>
+            <div className="modal-inner-v2">
+              <h3 className="modal-title-v2">Pilih Karaktermu</h3>
+              <div className="avatar-grid-v2">
+                {avatars.map((emoji) => (
+                  <motion.div 
+                    key={emoji}
+                    className={`avatar-option-v2 ${user?.avatarEmoji === emoji ? 'active' : ''}`}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => updateAvatar(emoji)}
+                  >
+                    <span className="emoji-display">{emoji}</span>
+                  </motion.div>
+                ))}
               </div>
-            )}
+              <IonButton expand="block" fill="clear" onClick={() => setShowAvatarSelector(false)} className="modal-close-btn">Tutup</IonButton>
+            </div>
           </div>
         </IonModal>
       </IonContent>
@@ -181,10 +249,6 @@ const Profile: React.FC = () => {
           <div className="nav-item" onClick={() => router.push('/home')}>
             <IonIcon icon={homeOutline} />
             <span>Beranda</span>
-          </div>
-          <div className="nav-item" onClick={() => router.push('/learning')}>
-            <IonIcon icon={libraryOutline} />
-            <span>Belajar</span>
           </div>
           <div className="nav-item" onClick={() => router.push('/games')}>
             <IonIcon icon={gameControllerOutline} />
