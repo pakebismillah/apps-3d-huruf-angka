@@ -297,7 +297,7 @@ const Learning: React.FC = () => {
           const questKey = `${category}_${quest.id}`;
           
           const updates: any = {
-            stars: currentStars + 5
+            stars: currentStars + 1
           };
           
           // Save last studied character
@@ -312,7 +312,7 @@ const Learning: React.FC = () => {
           }
           
           await update(userRef, updates);
-          setStars(currentStars + 5);
+          setStars(currentStars + 1);
         }
       } catch (error) {
         console.error("Error updating stars/progress:", error);
@@ -435,7 +435,12 @@ const Learning: React.FC = () => {
     addStar();
     setPraiseText("Tulisanmu Bagus Banget!");
     setShowPraise(true);
-    setTimeout(() => setShowPraise(false), 2000);
+    
+    // Auto move to next after 2 seconds
+    setTimeout(() => {
+      setShowPraise(false);
+      handleNext();
+    }, 2000);
   };
 
   const switchContent = (mode: 'huruf' | 'angka') => {

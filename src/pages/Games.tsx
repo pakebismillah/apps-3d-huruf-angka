@@ -86,7 +86,7 @@ const Games: React.FC = () => {
     setSelected(opt);
     if (opt === q.correct) {
       setStatus('correct');
-      setScore(s => s + 10);
+      setScore(s => s + 3);
       setTimeout(() => nextQuestion(), 2000);
     } else {
       setStatus('wrong');
@@ -108,11 +108,11 @@ const Games: React.FC = () => {
       if (currentUserId && user) {
         const userRef = ref(db, "students/" + currentUserId);
         update(userRef, {
-          stars: (user.stars || 0) + score + 10
+          stars: (user.stars || 0) + score
         });
       }
 
-      alert(`Hebat! Kamu dapat ${score + 10} Bintang Baru!`);
+      alert(`Hebat! Kamu dapat ${score} Bintang Baru!`);
       setGameMode(null);
       setCurrentIdx(0);
       setSelected(null);
