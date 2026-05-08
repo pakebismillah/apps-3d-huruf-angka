@@ -30,8 +30,31 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { ref, update, get, child, onValue } from "firebase/database";
 import { db } from "../firebase";
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import './Learning.css';
+
+// ============ Audio Helper ============
+function playAudioFile(src: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const audio = new Audio(src);
+    audio.onended = () => resolve();
+    audio.onerror = () => reject(new Error('File not found'));
+    audio.play().catch(reject);
+  });
+}
+
+function speakText(text: string, lang = 'id-ID'): Promise<void> {
+  return new Promise((resolve) => {
+    if (!('speechSynthesis' in window)) { resolve(); return; }
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = lang;
+    utter.rate = 0.85;
+    utter.onend = () => resolve();
+    utter.onerror = () => resolve();
+    window.speechSynthesis.speak(utter);
+  });
+}
 
 interface WordItem {
   text: string;
@@ -204,7 +227,6 @@ const quests: Quest[] = [
   })
 ];
 
-import { useLocation } from 'react-router-dom';
 
 const Learning: React.FC = () => {
   const router = useIonRouter();
@@ -379,25 +401,23 @@ const Learning: React.FC = () => {
 
   // ============ AUDIO: Huruf/Angka utama ============
   const playMainSound = useCallback(async () => {
-    if (isPlaying) return;
+    if (isPlaying || !quest) return;
     setIsPlaying(true);
     try {
-      if (isHuruf) {
-        await playAudioFile(`/assets/audio/huruf_${displayChar.toLowerCase()}.mp3`);
+      if (quest.category === 'letters') {
+        await playAudioFile(`/assets/audio/huruf_${quest.letter.toLowerCase()}.mp3`);
       } else {
-        await playAudioFile(`/assets/audio/angka_${currentNumber!.number}.mp3`);
+        await playAudioFile(`/assets/audio/angka_${quest.letter}.mp3`);
       }
     } catch {
-      // Fallback: Web Speech API
-      const text = isHuruf ? displayChar : currentNumber!.name;
-      await speakText(text);
+      await speakText(quest.letter);
     }
     setIsPlaying(false);
-  }, [isHuruf, displayChar, currentNumber, isPlaying]);
+  }, [quest, isPlaying]);
 
   // ============ AUDIO: Kata contoh ============
   const playWord = useCallback(async (word: { text: string; audio: string }) => {
-    if (playingWord) return;
+    if (playingWord || !quest) return;
     setPlayingWord(word.audio);
     setPraiseText(`Hebat! ${word.text}`);
     setShowPraise(true);
@@ -406,11 +426,10 @@ const Learning: React.FC = () => {
     try {
       await playAudioFile(`/assets/audio/kata_${word.audio}.mp3`);
     } catch {
-      const letter = currentLetter?.letter || '';
-      await speakText(`${letter} untuk ${word.text}`);
+      await speakText(`${quest.letter} untuk ${word.text}`);
     }
     setPlayingWord(null);
-  }, [playingWord, currentLetter]);
+  }, [playingWord, quest]);
 
   const handleFinishTracing = () => {
     addStar();
@@ -488,7 +507,7 @@ const Learning: React.FC = () => {
                   <motion.div 
                     className="letter-box-large"
                     whileTap={{ scale: 0.9 }}
-                    onClick={playLetterSound}
+                    onClick={playMainSound}
                   >
                     <span className="big-letter">{quest.letter}</span>
                     <span className="small-letter-display">{quest.smallLetter}</span>
@@ -500,10 +519,10 @@ const Learning: React.FC = () => {
 
                 <div className="lesson-heading">
                   <h1 className="main-title" style={{ color: '#1c1c1c' }}>
-                    {isHuruf ? currentLetter!.title : `ANGKA ${currentNumber!.number}`}
+                    {quest.title}
                   </h1>
                   <p className="sub-title" style={{ color: '#666' }}>
-                    {isHuruf ? currentLetter!.subtitle : `Mari belajar angka ${currentNumber!.name}!`}
+                    {quest.subtitle}
                   </p>
                 </div>
 
@@ -564,7 +583,7 @@ const Learning: React.FC = () => {
                   <div className="fact-content">
                     <span className="fact-label" style={{ color: '#1c1c1c' }}>Tahukah Kamu?</span>
                     <p style={{ color: '#5d4037' }}>
-                      {isHuruf ? currentLetter!.funFact : currentNumber!.funFact}
+                      {quest.funFact}
                     </p>
                   </div>
                 </div>
