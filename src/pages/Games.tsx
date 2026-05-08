@@ -91,10 +91,6 @@ const numberQuestions = [
   { id: 15, question: 'Mana angka 20?', options: ['10', '20', '30', '02'], correct: '20', hint: 'Angka 20 adalah angka 2 yang berteman dengan 0!', audio: '20' }
 ];
 
-  { id: 14, question: 'Mana angka 15?', options: ['14', '15', '16', '51'], correct: '15', hint: 'Angka 15 adalah angka 1 yang berteman dengan 5!', audio: '15' },
-  { id: 15, question: 'Mana angka 20?', options: ['10', '20', '30', '02'], correct: '20', hint: 'Angka 20 adalah angka 2 yang berteman dengan 0!', audio: '20' }
-];
-
 const fruitQuestions = [
   { id: 1, question: 'Mana buah Apel?', options: ['🍎', '🍌', '🍊', '🍇'], correct: '🍎', hint: 'Apel biasanya berwarna merah dan bulat!', audio: 'apel' },
   { id: 2, question: 'Mana buah Pisang?', options: ['🍎', '🍌', '🍊', '🍍'], correct: '🍌', hint: 'Pisang berwarna kuning dan bentuknya panjang!', audio: 'pisang' },
@@ -113,7 +109,7 @@ const animalQuestions = [
 
 const Games: React.FC = () => {
   const router = useIonRouter();
-  const [gameMode, setGameMode] = useState<'letters' | 'numbers' | 'fruits' | 'animals' | null>(null);
+  const [gameMode, setGameMode] = useState<'letters' | 'numbers' | 'fruits' | 'animals' | 'mixed' | null>(null);
   const [currentIdx, setCurrentIdx] = useState(0);
   const [selected, setSelected] = useState<string | null>(null);
   const [status, setStatus] = useState<'idle' | 'correct' | 'wrong'>('idle');
