@@ -62,7 +62,7 @@ const Profiles: React.FC = () => {
             initial={{ opacity: 0, y: -50 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <div className="brand-badge-v2">CERDIKA</div>
+            <img src="/assets/images/logo.png" alt="Cerdika Logo" className="brand-logo-profiles" />
             <h1 className="main-title-v2">Halo, Teman Pintar!</h1>
             <p className="sub-title-v2">Pilih siapa yang mau bertualang hari ini?</p>
           </motion.div>

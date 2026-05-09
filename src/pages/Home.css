@@ -160,25 +160,7 @@
   gap: 12px;
 }
 
-.brand-logo-container {
-  width: 55px;
-  height: 55px;
-  border-radius: 18px;
-  border: 3px solid #1c1c1c;
-  background-color: #FFF9C4;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  box-shadow: 3px 3px 0px #1c1c1c;
-  transform: rotate(-3deg);
-}
 
-.brand-logo-container img {
-  width: 40px;
-  height: 40px;
-  object-fit: contain;
-}
 
 .brand-name {
   font-family: 'Inter', sans-serif;

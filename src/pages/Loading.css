@@ -1,5 +1,5 @@
 .loading-content-v2 {
-  --background: #fbd63c; 
+  --background: #fbd63c;
 }
 
 .loading-screen-v2 {
@@ -24,7 +24,8 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(251, 214, 60, 0.9); /* Overlay to make dots subtle */
+  background: rgba(251, 214, 60, 0.9);
+  /* Overlay to make dots subtle */
   z-index: 0;
 }
 
@@ -32,7 +33,8 @@
   position: absolute;
   border-radius: 50%;
   z-index: 1;
-  border: 3px solid #1c1c1c; /* Reference shows borders on blobs */
+  border: 3px solid #1c1c1c;
+  /* Reference shows borders on blobs */
 }
 
 .top-left {
@@ -70,49 +72,37 @@
 }
 
 /* Badge Styling */
-.logo-placeholder-v2 {
-  margin-bottom: 80px;
+.logo-container-v2 {
+  margin-bottom: 60px;
   position: relative;
-}
-
-.logo-circle-v2 {
   width: 240px;
   height: 240px;
-  background: #fbd63c;
-  border: 12px solid #1c1c1c;
-  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 15px 15px 0px #1c1c1c; /* Heavy offset shadow from reference */
-  position: relative;
+  background: transparent;
+  transform: rotate(-3deg);
+  overflow: visible;
 }
 
-.logo-inner-ring {
-  width: 190px;
-  height: 190px;
-  background: #fbd63c;
-  border: 4px solid #1c1c1c;
-  border-radius: 50%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  /* Add subtle inner grid as seen in image */
-  background-image: linear-gradient(rgba(28,28,28,0.1) 1px, transparent 1px),
-                    linear-gradient(90deg, rgba(28,28,28,0.1) 1px, transparent 1px);
-  background-size: 10px 10px;
+.loading-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 60px;
+  animation: logo-pop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
-.brand-text-v2 {
-  font-family: 'Arial Black', sans-serif;
-  font-size: 2.2rem;
-  color: white;
-  text-transform: uppercase;
-  -webkit-text-stroke: 4px #1c1c1c;
-  paint-order: stroke fill;
-  margin-top: 60px; /* Leave space for squirrel logo later */
-  letter-spacing: -1px;
+@keyframes logo-pop {
+  0% {
+    transform: scale(0.8) rotate(-5deg);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
 }
 
 /* Progress Bar */
@@ -123,7 +113,7 @@
   border: 6px solid #1c1c1c;
   border-radius: 18px;
   overflow: hidden;
-  box-shadow: 0px 4px 0px rgba(0,0,0,0.1);
+  box-shadow: 0px 4px 0px rgba(0, 0, 0, 0.1);
   margin-bottom: 30px;
 }
 
@@ -152,6 +142,11 @@
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }

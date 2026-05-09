@@ -60,10 +60,7 @@ const Register: React.FC = () => {
       <IonContent className="register-content">
         <div className="register-wrapper">
           <div className="header-logo">
-            <div className="small-logo-badge">
-              <img src="/assets/images/logo.png" alt="Squirrel Academy" />
-            </div>
-            <div className="logo-label">Cerdika</div>
+            <img src="/assets/images/logo.png" alt="Cerdika Logo" className="brand-logo-register" />
           </div>
 
           <div className="card-container">
