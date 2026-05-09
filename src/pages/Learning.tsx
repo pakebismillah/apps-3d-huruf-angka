@@ -296,7 +296,6 @@ const Learning: React.FC = () => {
   const [contentMode, setContentMode] = useState<'huruf' | 'angka'>('huruf');
   const [showPraise, setShowPraise] = useState(false);
   const [praiseText, setPraiseText] = useState('');
-  const [praiseType, setPraiseType] = useState<'correct' | 'wrong'>('correct');
   const [isDrawing, setIsDrawing] = useState(false);
   const [showLetterSelector, setShowLetterSelector] = useState(false);
   const [stars, setStars] = useState(0);
@@ -306,7 +305,16 @@ const Learning: React.FC = () => {
   
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [userAvatar, setUserAvatar] = useState('🐱');
+  const [hasDrawn, setHasDrawn] = useState(false);
   
+  // Reset viewMode and hasDrawn
+  useEffect(() => {
+    if (category === 'fruits' || category === 'animals') {
+      setViewMode('discovery');
+    }
+    setHasDrawn(false);
+  }, [category, currentIdx, viewMode]);
+
   // Initialize currentIdx based on URL ID or default to 0
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -397,14 +405,23 @@ const Learning: React.FC = () => {
 
   const startDrawing = (e: any) => {
     setIsDrawing(true);
+    setHasDrawn(true);
     const canvas = canvasRef.current;
     if (canvas) {
       const ctx = canvas.getContext('2d');
-      const rect = canvas.getBoundingClientRect();
-      const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
-      const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
-      ctx?.beginPath();
-      ctx?.moveTo(x, y);
+      if (ctx) {
+        // Ensure consistent style every time we start drawing
+        ctx.lineJoin = 'round';
+        ctx.lineCap = 'round';
+        ctx.lineWidth = 15;
+        ctx.strokeStyle = '#64B5F6';
+        
+        const rect = canvas.getBoundingClientRect();
+        const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+        const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+      }
     }
   };
 
@@ -428,6 +445,7 @@ const Learning: React.FC = () => {
     if (canvas) {
       const ctx = canvas.getContext('2d');
       ctx?.clearRect(0, 0, canvas.width, canvas.height);
+      setHasDrawn(false);
     }
   };
 
@@ -479,6 +497,9 @@ const Learning: React.FC = () => {
   const playWord = useCallback(async (word: { text: string; audio: string }) => {
     if (playingWord || !quest) return;
     setPlayingWord(word.audio);
+    setPraiseText(`Hebat! ${word.text}`);
+    setShowPraise(true);
+    setTimeout(() => setShowPraise(false), 1500);
 
     try {
       await playAudioFile(`/assets/audio/kata_${word.audio}.mp3`);
@@ -488,84 +509,16 @@ const Learning: React.FC = () => {
     setPlayingWord(null);
   }, [playingWord, quest]);
 
-  const handleFinishTracing = async () => {
-    if (!canvasRef.current || isEvaluating) return;
+  const handleFinishTracing = () => {
+    addStar();
+    setPraiseText("Tulisanmu Bagus Banget!");
+    setShowPraise(true);
     
-    setIsEvaluating(true);
-    
-    try {
-      const canvas = canvasRef.current;
-      const offCanvas = document.createElement('canvas');
-      offCanvas.width = canvas.width;
-      offCanvas.height = canvas.height;
-      const ctx = offCanvas.getContext('2d');
-      if (!ctx) throw new Error("No context");
-      
-      // 1. Gambar ulang dari canvas utama (coretan anak)
-      ctx.drawImage(canvas, 0, 0);
-      
-      // 2. Ubah semua coretan (biru) menjadi hitam pekat agar kontras
-      ctx.globalCompositeOperation = 'source-in';
-      ctx.fillStyle = '#000000';
-      ctx.fillRect(0, 0, offCanvas.width, offCanvas.height);
-      
-      // 3. Beri latar belakang putih pekat di belakang coretan
-      ctx.globalCompositeOperation = 'destination-over';
-      ctx.fillStyle = '#FFFFFF';
-      ctx.fillRect(0, 0, offCanvas.width, offCanvas.height);
-      
-      // Kembalikan composite operation ke default
-      ctx.globalCompositeOperation = 'source-over';
-      
-      // Gunakan Tesseract untuk membaca tulisan
-      const worker = await createWorker('eng');
-      await worker.setParameters({
-        tessedit_pageseg_mode: PSM.SINGLE_CHAR, // Single character mode
-      });
-      
-      const { data: { text } } = await worker.recognize(offCanvas);
-      await worker.terminate();
-      
-      const recognizedText = text.trim().toUpperCase();
-      const targetLetter = quest.letter.toUpperCase();
-      
-      console.log("Recognized:", recognizedText, "Target:", targetLetter);
-      
-      // Cek apakah hasil deteksi mengandung target huruf/angka
-      if (recognizedText.includes(targetLetter) || recognizedText === targetLetter) {
-        addStar();
-        setPraiseType('correct');
-        setPraiseText("Hebat! Bentuknya Benar!");
-        setShowPraise(true);
-        
-        setTimeout(() => {
-          setShowPraise(false);
-          handleNext();
-        }, 2000);
-      } else {
-        setPraiseType('wrong');
-        setPraiseText("Hampir! Ayo coba perbaiki lagi.");
-        setShowPraise(true);
-        
-        setTimeout(() => {
-          setShowPraise(false);
-          clearCanvas(); // Otomatis hapus coretan sebelumnya jika salah
-        }, 2000);
-      }
-      
-    } catch (error) {
-      console.error("OCR Error:", error);
-      // Fallback jika ML gagal karena suatu hal
-      addStar();
-      setPraiseText("Bagus Sekali!");
-      setShowPraise(true);
-      setTimeout(() => {
-        setShowPraise(false);
-        handleNext();
-      }, 2000);
-    } finally {
-      setIsEvaluating(false);
-    }
+    // Auto move to next after 2 seconds
+    setTimeout(() => {
+      setShowPraise(false);
+      handleNext();
+    }, 2000);
   };
 
   const switchContent = (mode: 'huruf' | 'angka') => {
@@ -610,18 +563,21 @@ const Learning: React.FC = () => {
         </div>
 
         <div className="learning-wrapper">
-          <div className="mode-selector-container-inline">
-            <IonSegment value={viewMode} onIonChange={e => setViewMode(e.detail.value as any)} mode="ios" className="custom-segment">
-              <IonSegmentButton value="discovery">
-                <IonIcon icon={sparklesOutline} />
-                <IonLabel>Belajar {quest.type}</IonLabel>
-              </IonSegmentButton>
-              <IonSegmentButton value="tracing">
-                <IonIcon icon={brushOutline} />
-                <IonLabel>Tulis</IonLabel>
-              </IonSegmentButton>
-            </IonSegment>
-          </div>
+          {/* Only show segment if it's NOT fruits or animals */}
+          {(category !== 'fruits' && category !== 'animals') && (
+            <div className="mode-selector-container-inline">
+              <IonSegment value={viewMode} onIonChange={e => setViewMode(e.detail.value as any)} mode="ios" className="custom-segment">
+                <IonSegmentButton value="discovery">
+                  <IonIcon icon={sparklesOutline} />
+                  <IonLabel>Belajar {quest.type}</IonLabel>
+                </IonSegmentButton>
+                <IonSegmentButton value="tracing">
+                  <IonIcon icon={brushOutline} />
+                  <IonLabel>Tulis</IonLabel>
+                </IonSegmentButton>
+              </IonSegment>
+            </div>
+          )}
 
           <AnimatePresence mode="wait">
             {viewMode === 'discovery' ? (
@@ -639,8 +595,14 @@ const Learning: React.FC = () => {
                     whileTap={{ scale: 0.9 }}
                     onClick={playMainSound}
                   >
-                    <span className="big-letter">{quest.letter}</span>
-                    <span className="small-letter-display">{quest.smallLetter}</span>
+                    {quest.category === 'fruits' || quest.category === 'animals' ? (
+                      <span className="big-letter" style={{ fontSize: '120px' }}>{quest.smallLetter}</span>
+                    ) : (
+                      <>
+                        <span className="big-letter">{quest.letter}</span>
+                        <span className="small-letter-display">{quest.smallLetter}</span>
+                      </>
+                    )}
                     <button className="sound-pulse-v2">
                       <IonIcon icon={volumeMediumOutline} />
                     </button>
@@ -658,7 +620,7 @@ const Learning: React.FC = () => {
 
 
                 {/* Word Association Grid OR Counting Card */}
-                {quest.category === 'letters' ? (
+                {quest.category !== 'numbers' ? (
                   <div className="words-association-grid">
                     {quest.words?.map((word: WordItem, i: number) => (
                       <motion.div 
@@ -679,7 +641,7 @@ const Learning: React.FC = () => {
                       </motion.div>
                     ))}
                   </div>
-                ) : (
+                ) : quest.category === 'numbers' ? (
                   <div className="counting-card-container">
                     <motion.div 
                       className="counting-square-card"
@@ -705,7 +667,7 @@ const Learning: React.FC = () => {
                       </h2>
                     </motion.div>
                   </div>
-                )}
+                ) : null}
 
                 {/* Fun Fact */}
                 <div className="fun-fact-card">
@@ -717,6 +679,18 @@ const Learning: React.FC = () => {
                     </p>
                   </div>
                 </div>
+
+                {/* Finish Button for Fruits/Animals */}
+                {(category === 'fruits' || category === 'animals') && (
+                  <motion.button 
+                    className="finish-discovery-btn"
+                    whileTap={{ scale: 0.9 }}
+                    onClick={handleFinishDiscovery}
+                  >
+                    <IonIcon icon={happyOutline} />
+                    <span>Selesai Belajar!</span>
+                  </motion.button>
+                )}
               </motion.div>
             ) : (
               <motion.div
@@ -788,8 +762,17 @@ const Learning: React.FC = () => {
               <span>{currentIdx + 1} / {filteredQuests.length}</span>
             </div>
             <button 
-              className={`nav-btn-round ${currentIdx === filteredQuests.length - 1 ? 'disabled' : ''}`}
-              onClick={handleNext}
+              className={`nav-btn-round ${currentIdx === filteredQuests.length - 1 || (viewMode === 'tracing' && !hasDrawn) ? 'disabled' : ''}`}
+              onClick={() => {
+                if (viewMode === 'tracing' && !hasDrawn) {
+                  setPraiseText("Ayo tulis dulu!");
+                  setPraiseType('warning');
+                  setShowPraise(true);
+                  setTimeout(() => setShowPraise(false), 1500);
+                  return;
+                }
+                handleNext();
+              }}
             >
               <IonIcon icon={chevronForwardOutline} />
             </button>
@@ -810,14 +793,14 @@ const Learning: React.FC = () => {
               {filteredQuests.map((q, i) => (
                 <div 
                   key={q.id} 
-                  className={`selector-item ${i === currentIdx ? 'active' : ''}`}
+                  className={`selector-item ${i === currentIdx ? 'active' : ''} ${q.category === 'fruits' || q.category === 'animals' ? 'is-emoji' : ''}`}
                   onClick={() => {
                     setCurrentIdx(i);
                     setShowLetterSelector(false);
                     setViewMode('discovery');
                   }}
                 >
-                  {q.letter}
+                  {q.category === 'fruits' || q.category === 'animals' ? q.smallLetter : q.letter}
                 </div>
               ))}
               <div className="selector-item locked">C</div>
@@ -837,12 +820,9 @@ const Learning: React.FC = () => {
               exit={{ opacity: 0 }}
             >
               <div className="praise-popup">
-                <IonIcon 
-                  icon={praiseType === 'correct' ? happyOutline : closeCircleOutline} 
-                  className={`praise-icon-large ${praiseType === 'wrong' ? 'icon-wrong' : ''}`} 
-                />
+                <IonIcon icon={happyOutline} className="praise-icon-large" />
                 <h2>{praiseText}</h2>
-                {praiseType === 'correct' && <div className="stars-anim">⭐⭐⭐</div>}
+                <div className="stars-anim">⭐⭐⭐</div>
               </div>
             </motion.div>
           )}
