@@ -297,6 +297,7 @@ const Learning: React.FC = () => {
   const [contentMode, setContentMode] = useState<'huruf' | 'angka'>('huruf');
   const [showPraise, setShowPraise] = useState(false);
   const [praiseText, setPraiseText] = useState('');
+  const [praiseType, setPraiseType] = useState<'correct' | 'wrong' | 'warning' | 'success'>('correct');
   const [isDrawing, setIsDrawing] = useState(false);
   const [showLetterSelector, setShowLetterSelector] = useState(false);
   const [stars, setStars] = useState(0);
@@ -590,20 +591,8 @@ const Learning: React.FC = () => {
 
   const handleFinishDiscovery = () => {
     addStar();
-    setPraiseType('correct');
-    setPraiseText(`Hebat! Kamu sudah mengenal ${quest.letter}`);
-    setShowPraise(true);
-    
-    setTimeout(() => {
-      setShowPraise(false);
-      handleNext();
-    }, 2000);
-  };
-
-  const handleFinishDiscovery = () => {
-    addStar();
-    setPraiseText("Hebat! Kamu sudah belajar ini.");
     setPraiseType('success');
+    setPraiseText(`Hebat! Kamu sudah belajar mengenal ${quest.letter}.`);
     setShowPraise(true);
     
     // Auto move to next after 2 seconds
@@ -914,14 +903,14 @@ const Learning: React.FC = () => {
               <div className="praise-popup">
                 <IonIcon 
                   icon={
-                    praiseType === 'correct' ? happyOutline : 
+                    (praiseType === 'correct' || praiseType === 'success') ? happyOutline : 
                     praiseType === 'warning' ? alertCircleOutline : 
                     closeCircleOutline
                   } 
                   className={`praise-icon-large ${praiseType}`} 
                 />
                 <h2>{praiseText}</h2>
-                {praiseType === 'correct' && <div className="stars-anim">⭐⭐⭐</div>}
+                {(praiseType === 'correct' || praiseType === 'success') && <div className="stars-anim">⭐⭐⭐</div>}
               </div>
             </motion.div>
           )}

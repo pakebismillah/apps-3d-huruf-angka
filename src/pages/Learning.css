@@ -634,6 +634,11 @@ ion-segment-button {
   backdrop-filter: blur(10px);
 }
 
+.praise-overlay.correct,
+.praise-overlay.success {
+  background: rgba(232, 245, 233, 0.95);
+}
+
 .praise-overlay.wrong {
   background: rgba(255, 235, 238, 0.95);
 }
@@ -656,6 +661,11 @@ ion-segment-button {
   font-size: 100px;
   color: #4caf50;
   margin-bottom: 20px;
+}
+
+.praise-icon-large.correct,
+.praise-icon-large.success {
+  color: #4caf50;
 }
 
 .praise-icon-large.wrong {
