@@ -78,7 +78,6 @@ const Home: React.FC = () => {
                 onClick={() => router.push('/profile')}
               >
                 <span className="logo-emoji">{user.avatarEmoji}</span>
-                <div className="logo-sparkle"></div>
               </motion.div>
               <div className="brand-info-v2">
                 <h2 className="brand-name-v2">{user.name}</h2>
@@ -86,9 +85,6 @@ const Home: React.FC = () => {
                   <div className="stars-pill-v2">
                     <IonIcon icon={star} />
                     <span>{user.stars} Bintang</span>
-                  </div>
-                  <div className="level-pill-v2">
-                    <span>Level {Math.floor(user.stars / 50) + 1}</span>
                   </div>
                 </div>
               </div>

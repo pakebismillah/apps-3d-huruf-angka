@@ -33,7 +33,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ref, update, get, child, onValue } from "firebase/database";
 import { db } from "../firebase";
 import { useParams, useLocation } from 'react-router-dom';
-import { createWorker, PSM } from 'tesseract.js';
 import './Learning.css';
 
 // ============ Audio Helper ============
@@ -297,13 +296,11 @@ const Learning: React.FC = () => {
   const [contentMode, setContentMode] = useState<'huruf' | 'angka'>('huruf');
   const [showPraise, setShowPraise] = useState(false);
   const [praiseText, setPraiseText] = useState('');
-  const [praiseType, setPraiseType] = useState<'correct' | 'wrong' | 'warning'>('correct');
   const [isDrawing, setIsDrawing] = useState(false);
   const [showLetterSelector, setShowLetterSelector] = useState(false);
   const [stars, setStars] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [playingWord, setPlayingWord] = useState<string | null>(null);
-  const [isEvaluating, setIsEvaluating] = useState(false);
   
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [userAvatar, setUserAvatar] = useState('🐱');
@@ -508,93 +505,12 @@ const Learning: React.FC = () => {
     setPlayingWord(null);
   }, [playingWord, quest]);
 
-  const handleFinishTracing = async () => {
-    if (!canvasRef.current || isEvaluating) return;
-    
-    setIsEvaluating(true);
-    
-    try {
-      const canvas = canvasRef.current;
-      const offCanvas = document.createElement('canvas');
-      offCanvas.width = canvas.width;
-      offCanvas.height = canvas.height;
-      const ctx = offCanvas.getContext('2d');
-      if (!ctx) throw new Error("No context");
-      
-      // 1. Gambar ulang dari canvas utama (coretan anak)
-      ctx.drawImage(canvas, 0, 0);
-      
-      // 2. Ubah semua coretan (biru) menjadi hitam pekat agar kontras
-      ctx.globalCompositeOperation = 'source-in';
-      ctx.fillStyle = '#000000';
-      ctx.fillRect(0, 0, offCanvas.width, offCanvas.height);
-      
-      // 3. Beri latar belakang putih pekat di belakang coretan
-      ctx.globalCompositeOperation = 'destination-over';
-      ctx.fillStyle = '#FFFFFF';
-      ctx.fillRect(0, 0, offCanvas.width, offCanvas.height);
-      
-      // Kembalikan composite operation ke default
-      ctx.globalCompositeOperation = 'source-over';
-      
-      // Gunakan Tesseract untuk membaca tulisan
-      const worker = await createWorker('eng');
-      await worker.setParameters({
-        tessedit_pageseg_mode: PSM.SINGLE_CHAR, // Single character mode
-      });
-      
-      const { data: { text } } = await worker.recognize(offCanvas);
-      await worker.terminate();
-      
-      const recognizedText = text.trim().toUpperCase();
-      const targetLetter = quest.letter.toUpperCase();
-      
-      console.log("Recognized:", recognizedText, "Target:", targetLetter);
-      
-      // Cek apakah hasil deteksi mengandung target huruf/angka
-      if (recognizedText.includes(targetLetter) || recognizedText === targetLetter) {
-        addStar();
-        setPraiseType('correct');
-        setPraiseText("Hebat! Bentuknya Benar!");
-        setShowPraise(true);
-        
-        setTimeout(() => {
-          setShowPraise(false);
-          handleNext();
-        }, 2000);
-      } else {
-        setPraiseType('wrong');
-        setPraiseText("Hampir! Ayo coba perbaiki lagi.");
-        setShowPraise(true);
-        
-        setTimeout(() => {
-          setShowPraise(false);
-          clearCanvas(); // Otomatis hapus coretan sebelumnya jika salah
-        }, 2000);
-      }
-      
-    } catch (error) {
-      console.error("OCR Error:", error);
-      // Fallback jika ML gagal karena suatu hal
-      addStar();
-      setPraiseType('correct');
-      setPraiseText("Bagus Sekali!");
-      setShowPraise(true);
-      setTimeout(() => {
-        setShowPraise(false);
-        handleNext();
-      }, 2000);
-    } finally {
-      setIsEvaluating(false);
-    }
-  };
-
-  const handleFinishDiscovery = () => {
+  const handleFinishTracing = () => {
     addStar();
-    setPraiseType('correct');
-    setPraiseText(`Hebat! Kamu sudah mengenal ${quest.letter}`);
+    setPraiseText("Tulisanmu Bagus Banget!");
     setShowPraise(true);
     
+    // Auto move to next after 2 seconds
     setTimeout(() => {
       setShowPraise(false);
       handleNext();
@@ -816,13 +732,9 @@ const Learning: React.FC = () => {
                       <IonIcon icon={trashOutline} />
                       <span>Hapus</span>
                     </button>
-                    <button 
-                      className={`control-btn done ${isEvaluating ? 'evaluating' : ''}`} 
-                      onClick={handleFinishTracing}
-                      disabled={isEvaluating}
-                    >
-                      <IonIcon icon={isEvaluating ? sparklesOutline : happyOutline} />
-                      <span>{isEvaluating ? 'Menilai...' : 'Selesai'}</span>
+                    <button className="control-btn done" onClick={handleFinishTracing}>
+                      <IonIcon icon={happyOutline} />
+                      <span>Selesai</span>
                     </button>
                   </div>
                 </div>
@@ -900,16 +812,9 @@ const Learning: React.FC = () => {
               exit={{ opacity: 0 }}
             >
               <div className="praise-popup">
-                <IonIcon 
-                  icon={
-                    praiseType === 'correct' ? happyOutline : 
-                    praiseType === 'warning' ? alertCircleOutline : 
-                    closeCircleOutline
-                  } 
-                  className={`praise-icon-large ${praiseType}`} 
-                />
+                <IonIcon icon={happyOutline} className="praise-icon-large" />
                 <h2>{praiseText}</h2>
-                {praiseType === 'correct' && <div className="stars-anim">⭐⭐⭐</div>}
+                <div className="stars-anim">⭐⭐⭐</div>
               </div>
             </motion.div>
           )}

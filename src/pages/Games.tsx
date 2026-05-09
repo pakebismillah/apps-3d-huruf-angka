@@ -250,9 +250,6 @@ const Games: React.FC = () => {
                     <IonIcon icon={star} />
                     <span>{user?.stars || 0} Bintang</span>
                   </div>
-                  <div className="level-pill-v2">
-                    <span>Level {userLevel}</span>
-                  </div>
                 </div>
               </div>
             </div>
@@ -267,19 +264,6 @@ const Games: React.FC = () => {
         <div className="games-wrapper">
           {!gameMode ? (
             <div className="mode-selection-screen">
-              <div className="level-progress-banner">
-                <div className="level-info-main">
-                  <span className="lvl-text">Level {userLevel}</span>
-                  <span className="lvl-sub">Kumpulkan bintang untuk naik level!</span>
-                </div>
-                <div className="lvl-progress-bar">
-                  <motion.div 
-                    className="lvl-progress-fill"
-                    initial={{ width: 0 }}
-                    animate={{ width: `${(userLevel / 5) * 100}%` }}
-                  />
-                </div>
-              </div>
 
               <div className="mode-options">
                 {/* Level 1 */}
@@ -288,7 +272,6 @@ const Games: React.FC = () => {
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setGameMode('letters')}
                 >
-                  <div className="mode-level-tag">Lvl 1</div>
                   <div className="mode-icon-box">
                     <span className="mode-emoji">ABC</span>
                   </div>
@@ -304,7 +287,6 @@ const Games: React.FC = () => {
                   whileTap={{ scale: 0.95 }}
                   onClick={() => currentStars >= 25 && setGameMode('numbers')}
                 >
-                  <div className="mode-level-tag">Lvl 2</div>
                   <div className="mode-icon-box">
                     <span className="mode-emoji">{currentStars < 25 ? '🔒' : '123'}</span>
                   </div>
@@ -324,7 +306,6 @@ const Games: React.FC = () => {
                   whileTap={{ scale: 0.95 }}
                   onClick={() => currentStars >= 50 && setGameMode('fruits')}
                 >
-                  <div className="mode-level-tag">Lvl 3</div>
                   <div className="mode-icon-box">
                     <span className="mode-emoji">{currentStars < 50 ? '🔒' : '🍎'}</span>
                   </div>
@@ -344,7 +325,6 @@ const Games: React.FC = () => {
                   whileTap={{ scale: 0.95 }}
                   onClick={() => currentStars >= 100 && setGameMode('animals')}
                 >
-                  <div className="mode-level-tag">Lvl 4</div>
                   <div className="mode-icon-box">
                     <span className="mode-emoji">{currentStars < 100 ? '🔒' : '🦁'}</span>
                   </div>
@@ -364,7 +344,6 @@ const Games: React.FC = () => {
                   whileTap={{ scale: 0.95 }}
                   onClick={() => currentStars >= 150 && setGameMode('mixed')}
                 >
-                  <div className="mode-level-tag">Lvl 5</div>
                   <div className="mode-icon-box">
                     <span className="mode-emoji">{currentStars < 150 ? '🔒' : '🏆'}</span>
                   </div>

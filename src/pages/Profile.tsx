@@ -100,9 +100,6 @@ const Profile: React.FC = () => {
                     <IonIcon icon={star} />
                     <span>{user?.stars || 0} Bintang</span>
                   </div>
-                  <div className="level-pill-v2">
-                    <span>Level {level}</span>
-                  </div>
                 </div>
               </div>
             </div>
@@ -148,7 +145,6 @@ const Profile: React.FC = () => {
             <p className="user-motivation">Kamu sudah belajar banyak hal luar biasa hari ini.</p>
             
             <div className="stats-pills">
-              <div className="stat-pill level">Level {level}</div>
               <div className="stat-pill xp">{user?.stars || 0} Bintang</div>
             </div>
           </motion.div>
