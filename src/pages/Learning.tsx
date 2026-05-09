@@ -296,6 +296,7 @@ const Learning: React.FC = () => {
   const [contentMode, setContentMode] = useState<'huruf' | 'angka'>('huruf');
   const [showPraise, setShowPraise] = useState(false);
   const [praiseText, setPraiseText] = useState('');
+  const [praiseType, setPraiseType] = useState<'success' | 'warning'>('success');
   const [isDrawing, setIsDrawing] = useState(false);
   const [showLetterSelector, setShowLetterSelector] = useState(false);
   const [stars, setStars] = useState(0);
@@ -508,6 +509,19 @@ const Learning: React.FC = () => {
   const handleFinishTracing = () => {
     addStar();
     setPraiseText("Tulisanmu Bagus Banget!");
+    setShowPraise(true);
+    
+    // Auto move to next after 2 seconds
+    setTimeout(() => {
+      setShowPraise(false);
+      handleNext();
+    }, 2000);
+  };
+
+  const handleFinishDiscovery = () => {
+    addStar();
+    setPraiseText("Hebat! Kamu sudah belajar ini.");
+    setPraiseType('success');
     setShowPraise(true);
     
     // Auto move to next after 2 seconds
