@@ -475,6 +475,10 @@ ion-segment-button {
   cursor: pointer;
 }
 
+.selector-item.is-emoji {
+  font-size: 32px;
+}
+
 .selector-item.active { background: #ffd740; }
 .selector-item.locked { background: #eee; color: #999; box-shadow: none; }
 
@@ -535,5 +539,108 @@ ion-segment-button {
   padding-bottom: 50px;
   overflow-y: auto;
   max-height: 80vh;
+}
+
+.finish-discovery-btn {
+  margin-top: 10px;
+  height: 60px;
+  background: linear-gradient(145deg, #69f0ae, #00e676);
+  border: 4px solid #1c1c1c;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-weight: 900;
+  font-size: 18px;
+  color: #1c1c1c;
+  box-shadow: 6px 6px 0 #1c1c1c;
+  width: 100%;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.finish-discovery-btn:active {
+  transform: scale(0.95);
+  box-shadow: 2px 2px 0 #1c1c1c;
+}
+
+/* Praise/Notification Overlay */
+.praise-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 2000;
+}
+
+.praise-popup {
+  width: 100%;
+  max-width: 300px;
+  background: white;
+  border: 4px solid #1c1c1c;
+  border-radius: 35px;
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: 12px 12px 0 #1c1c1c;
+}
+
+.popup-success {
+  background: #E8F5E9;
+}
+
+.popup-warning {
+  background: #FFF9C4;
+}
+
+.praise-icon-box {
+  width: 80px;
+  height: 80px;
+  background: white;
+  border: 3px solid #1c1c1c;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  box-shadow: 4px 4px 0 #1c1c1c;
+}
+
+.praise-icon-large {
+  font-size: 42px;
+  color: #1c1c1c;
+}
+
+.popup-success .praise-icon-large {
+  color: #2e7d32;
+}
+
+.popup-warning .praise-icon-large {
+  color: #f57c00;
+}
+
+.praise-title {
+  font-family: 'Inter', sans-serif;
+  font-weight: 900;
+  font-size: 22px;
+  color: #1c1c1c;
+  margin: 0 0 10px 0;
+  line-height: 1.2;
+}
+
+.stars-anim {
+  font-size: 24px;
+  letter-spacing: 5px;
 }
 
