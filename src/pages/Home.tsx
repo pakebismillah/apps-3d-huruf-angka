@@ -82,9 +82,14 @@ const Home: React.FC = () => {
               </motion.div>
               <div className="brand-info-v2">
                 <h2 className="brand-name-v2">{user.name}</h2>
-                <div className="stars-pill-v2">
-                  <IonIcon icon={star} />
-                  <span>{user.stars} Bintang</span>
+                <div className="status-pills-row">
+                  <div className="stars-pill-v2">
+                    <IonIcon icon={star} />
+                    <span>{user.stars} Bintang</span>
+                  </div>
+                  <div className="level-pill-v2">
+                    <span>Level {Math.floor(user.stars / 50) + 1}</span>
+                  </div>
                 </div>
               </div>
             </div>

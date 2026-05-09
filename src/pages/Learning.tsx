@@ -352,11 +352,15 @@ const Learning: React.FC = () => {
             stars: currentStars + 1
           };
           
-          // Save last studied character
+          // Save last studied item
           if (category === 'letters') {
             updates.lastLetter = quest.letter;
-          } else {
+          } else if (category === 'numbers') {
             updates.lastNumber = quest.letter;
+          } else if (category === 'fruits') {
+            updates.lastFruit = quest.letter;
+          } else if (category === 'animals') {
+            updates.lastAnimal = quest.letter;
           }
           
           if (!completed.includes(questKey)) {

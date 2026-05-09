@@ -64,6 +64,8 @@ const Profile: React.FC = () => {
   const completedQuests = user?.completedQuests || [];
   const letterCount = completedQuests.filter((q: string) => q.startsWith('letters_')).length;
   const numberCount = completedQuests.filter((q: string) => q.startsWith('numbers_')).length;
+  const fruitCount = completedQuests.filter((q: string) => q.startsWith('fruits_')).length;
+  const animalCount = completedQuests.filter((q: string) => q.startsWith('animals_')).length;
   const level = Math.floor((user?.stars || 0) / 50) + 1;
 
   const badges = [
@@ -93,9 +95,14 @@ const Profile: React.FC = () => {
               </div>
               <div className="brand-info-v2">
                 <h2 className="brand-name-v2">{user?.name || 'Profil'}</h2>
-                <div className="stars-pill-v2">
-                  <IonIcon icon={star} />
-                  <span>{user?.stars || 0} Bintang</span>
+                <div className="status-pills-row">
+                  <div className="stars-pill-v2">
+                    <IonIcon icon={star} />
+                    <span>{user?.stars || 0} Bintang</span>
+                  </div>
+                  <div className="level-pill-v2">
+                    <span>Level {level}</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -201,6 +208,60 @@ const Profile: React.FC = () => {
               </div>
               <p className="progress-hint">
                 {numberCount > 0 ? `Sudah mempelajari ${numberCount} angka!` : 'Ayo mulai berhitung hari ini!'}
+              </p>
+            </motion.div>
+
+            <motion.div 
+              className="progress-card actionable"
+              whileTap={{ scale: 0.98 }}
+              onClick={() => {
+                if (user?.lastFruit) {
+                  router.push(`/learning/fruits?id=${user.lastFruit}`);
+                } else {
+                  router.push('/learning/fruits');
+                }
+              }}
+            >
+              <div className="progress-header">
+                <span className="label">Buah Terakhir</span>
+                <span className="value-highlight">{user?.lastFruit || 'Kosong'}</span>
+              </div>
+              <div className="progress-bar-bg">
+                <motion.div 
+                  className="progress-bar-fill red"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${(fruitCount / 5) * 100}%` }}
+                />
+              </div>
+              <p className="progress-hint">
+                {fruitCount > 0 ? `Sudah mempelajari ${fruitCount} buah!` : 'Ayo kenali buah-buahan segar!'}
+              </p>
+            </motion.div>
+
+            <motion.div 
+              className="progress-card actionable"
+              whileTap={{ scale: 0.98 }}
+              onClick={() => {
+                if (user?.lastAnimal) {
+                  router.push(`/learning/animals?id=${user.lastAnimal}`);
+                } else {
+                  router.push('/learning/animals');
+                }
+              }}
+            >
+              <div className="progress-header">
+                <span className="label">Hewan Terakhir</span>
+                <span className="value-highlight">{user?.lastAnimal || 'Kosong'}</span>
+              </div>
+              <div className="progress-bar-bg">
+                <motion.div 
+                  className="progress-bar-fill purple"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${(animalCount / 5) * 100}%` }}
+                />
+              </div>
+              <p className="progress-hint">
+                {animalCount > 0 ? `Sudah melihat ${animalCount} hewan!` : 'Ayo temukan teman hewan baru!'}
               </p>
             </motion.div>
           </div>

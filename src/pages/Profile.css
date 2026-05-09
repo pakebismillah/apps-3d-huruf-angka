@@ -202,6 +202,23 @@
   color: #1c1c1c;
 }
 
+.status-pills-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.level-pill-v2 {
+  background: #E1F5FE;
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: 800;
+  color: #1c1c1c;
+  display: flex;
+  align-items: center;
+}
+
 .header-logout-btn-v2 {
   background: #FF5252;
   color: white;
@@ -255,6 +272,8 @@
 
 .progress-bar-fill.yellow { background: #fbc02d; }
 .progress-bar-fill.green { background: #69f0ae; }
+.progress-bar-fill.red { background: #ff5252; }
+.progress-bar-fill.purple { background: #ab47bc; }
 
 .progress-hint {
   font-size: 12px;

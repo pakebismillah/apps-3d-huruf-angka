@@ -51,44 +51,44 @@ function speakText(text: string, lang = 'id-ID'): Promise<void> {
 
 
 const letterQuestions = [
-  { id: 1, question: 'Mana huruf B?', options: ['A', 'B', 'C', 'D'], correct: 'B', hint: 'Huruf B punya dua perut yang gendut di depan!', audio: 'B' },
-  { id: 2, question: 'Mana huruf G?', options: ['G', 'F', 'H', 'J'], correct: 'G', hint: 'G seperti kepala kucing yang melingkar!', audio: 'G' },
-  { id: 3, question: 'Mana huruf A?', options: ['V', 'M', 'A', 'N'], correct: 'A', hint: 'A seperti atap rumah yang runcing!', audio: 'A' },
-  { id: 4, question: 'Mana huruf D?', options: ['B', 'D', 'P', 'Q'], correct: 'D', hint: 'D punya satu perut besar di belakang!', audio: 'D' },
-  { id: 5, question: 'Mana huruf F?', options: ['E', 'F', 'L', 'T'], correct: 'F', hint: 'F seperti bendera yang punya dua garis!', audio: 'F' },
-  { id: 6, question: 'Mana huruf K?', options: ['K', 'X', 'Y', 'Z'], correct: 'K', hint: 'K punya mulut terbuka dan tangan melambai!', audio: 'K' },
-  { id: 7, question: 'Mana huruf M?', options: ['W', 'V', 'M', 'N'], correct: 'M', hint: 'M seperti dua gunung yang berjajar!', audio: 'M' },
-  { id: 8, question: 'Mana huruf S?', options: ['Z', 'S', 'C', 'O'], correct: 'S', hint: 'S meliuk-liuk seperti ular!', audio: 'S' },
-  { id: 9, question: 'Mana huruf T?', options: ['I', 'J', 'T', 'L'], correct: 'T', hint: 'T seperti tiang jemuran yang lurus!', audio: 'T' },
-  { id: 10, question: 'Mana huruf Z?', options: ['N', 'M', 'Z', 'S'], correct: 'Z', hint: 'Z seperti jalanan yang berbelok tajam!', audio: 'Z' },
-  { id: 11, question: 'Mana huruf E?', options: ['E', 'F', 'L', 'H'], correct: 'E', hint: 'E seperti sisir yang punya tiga gigi!', audio: 'E' },
-  { id: 12, question: 'Mana huruf H?', options: ['H', 'N', 'M', 'U'], correct: 'H', hint: 'H seperti tangga yang ada jembatannya!', audio: 'H' },
-  { id: 13, question: 'Mana huruf J?', options: ['J', 'L', 'I', 'U'], correct: 'J', hint: 'J seperti kail pancing ikan!', audio: 'J' },
-  { id: 14, question: 'Mana huruf L?', options: ['L', 'I', 'J', 'T'], correct: 'L', hint: 'L seperti kaki yang sedang selonjor!', audio: 'L' },
-  { id: 15, question: 'Mana huruf O?', options: ['O', 'C', 'Q', 'D'], correct: 'O', hint: 'O bulat seperti donat!', audio: 'O' },
-  { id: 16, question: 'Mana huruf P?', options: ['P', 'R', 'B', 'D'], correct: 'P', hint: 'P punya satu perut di atas!', audio: 'P' },
-  { id: 17, question: 'Mana huruf R?', options: ['R', 'P', 'B', 'K'], correct: 'R', hint: 'R itu huruf P yang sedang melangkah!', audio: 'R' },
-  { id: 18, question: 'Mana huruf U?', options: ['U', 'V', 'W', 'N'], correct: 'U', hint: 'U seperti gelas yang terbuka di atas!', audio: 'U' },
-  { id: 19, question: 'Mana huruf V?', options: ['V', 'U', 'W', 'Y'], correct: 'V', hint: 'V seperti paruh burung yang terbuka!', audio: 'V' },
-  { id: 20, question: 'Mana huruf W?', options: ['W', 'M', 'V', 'N'], correct: 'W', hint: 'W seperti dua huruf V yang bergandengan!', audio: 'W' }
+  { id: 1, question: 'Mana huruf B?', options: ['A', 'B', 'C', 'D'], correct: 'B', hint: 'Punya dua perut yang gendut di depan!', audio: 'B' },
+  { id: 2, question: 'Mana huruf G?', options: ['G', 'F', 'H', 'J'], correct: 'G', hint: 'Seperti kepala kucing yang melingkar!', audio: 'G' },
+  { id: 3, question: 'Mana huruf A?', options: ['V', 'M', 'A', 'N'], correct: 'A', hint: 'Seperti atap rumah yang runcing!', audio: 'A' },
+  { id: 4, question: 'Mana huruf D?', options: ['B', 'D', 'P', 'Q'], correct: 'D', hint: 'Punya satu perut besar di belakang!', audio: 'D' },
+  { id: 5, question: 'Mana huruf F?', options: ['E', 'F', 'L', 'T'], correct: 'F', hint: 'Seperti bendera yang punya dua garis!', audio: 'F' },
+  { id: 6, question: 'Mana huruf K?', options: ['K', 'X', 'Y', 'Z'], correct: 'K', hint: 'Punya mulut terbuka dan tangan melambai!', audio: 'K' },
+  { id: 7, question: 'Mana huruf M?', options: ['W', 'V', 'M', 'N'], correct: 'M', hint: 'Seperti dua gunung yang berjajar!', audio: 'M' },
+  { id: 8, question: 'Mana huruf S?', options: ['Z', 'S', 'C', 'O'], correct: 'S', hint: 'Meliuk-liuk seperti ular!', audio: 'S' },
+  { id: 9, question: 'Mana huruf T?', options: ['I', 'J', 'T', 'L'], correct: 'T', hint: 'Seperti tiang jemuran yang lurus!', audio: 'T' },
+  { id: 10, question: 'Mana huruf Z?', options: ['N', 'M', 'Z', 'S'], correct: 'Z', hint: 'Seperti jalanan yang berbelok tajam!', audio: 'Z' },
+  { id: 11, question: 'Mana huruf E?', options: ['E', 'F', 'L', 'H'], correct: 'E', hint: 'Seperti sisir yang punya tiga gigi!', audio: 'E' },
+  { id: 12, question: 'Mana huruf H?', options: ['H', 'N', 'M', 'U'], correct: 'H', hint: 'Seperti tangga yang ada jembatannya!', audio: 'H' },
+  { id: 13, question: 'Mana huruf J?', options: ['J', 'L', 'I', 'U'], correct: 'J', hint: 'Seperti kail pancing ikan!', audio: 'J' },
+  { id: 14, question: 'Mana huruf L?', options: ['L', 'I', 'J', 'T'], correct: 'L', hint: 'Seperti kaki yang sedang selonjor!', audio: 'L' },
+  { id: 15, question: 'Mana huruf O?', options: ['O', 'C', 'Q', 'D'], correct: 'O', hint: 'Bulat seperti donat!', audio: 'O' },
+  { id: 16, question: 'Mana huruf P?', options: ['P', 'R', 'B', 'D'], correct: 'P', hint: 'Punya satu perut di atas!', audio: 'P' },
+  { id: 17, question: 'Mana huruf R?', options: ['R', 'P', 'B', 'K'], correct: 'R', hint: 'Punya satu perut di atas dan satu kaki yang melangkah!', audio: 'R' },
+  { id: 18, question: 'Mana huruf U?', options: ['U', 'V', 'W', 'N'], correct: 'U', hint: 'Seperti gelas yang terbuka di atas!', audio: 'U' },
+  { id: 19, question: 'Mana huruf V?', options: ['V', 'U', 'W', 'Y'], correct: 'V', hint: 'Seperti paruh burung yang terbuka!', audio: 'V' },
+  { id: 20, question: 'Mana huruf W?', options: ['W', 'M', 'V', 'N'], correct: 'W', hint: 'Seperti dua huruf V yang bergandengan!', audio: 'W' }
 ];
 
 const numberQuestions = [
-  { id: 1, question: 'Mana angka 5?', options: ['3', '5', '2', '8'], correct: '5', hint: 'Angka 5 punya perut buncit dan pakai topi!', audio: '5' },
-  { id: 2, question: 'Mana angka 1?', options: ['1', '4', '7', '0'], correct: '1', hint: 'Angka 1 tegak lurus seperti tiang lampu!', audio: '1' },
-  { id: 3, question: 'Mana angka 3?', options: ['2', '3', '8', '6'], correct: '3', hint: 'Angka 3 seperti sayap burung yang sedang terbang!', audio: '3' },
-  { id: 4, question: 'Mana angka 8?', options: ['0', '9', '8', '6'], correct: '8', hint: 'Angka 8 seperti kacamata yang ditumpuk!', audio: '8' },
-  { id: 5, question: 'Mana angka 2?', options: ['5', '2', '7', '3'], correct: '2', hint: 'Angka 2 melengkung seperti leher angsa!', audio: '2' },
-  { id: 6, question: 'Mana angka 6?', options: ['9', '6', '0', '5'], correct: '6', hint: 'Angka 6 punya perut bulat di bawah!', audio: '6' },
-  { id: 7, question: 'Mana angka 9?', options: ['6', '9', '8', '0'], correct: '9', hint: 'Angka 9 punya kepala besar di atas!', audio: '9' },
-  { id: 8, question: 'Mana angka 4?', options: ['1', '7', '4', '2'], correct: '4', hint: 'Angka 4 seperti kursi yang terbalik!', audio: '4' },
-  { id: 9, question: 'Mana angka 7?', options: ['1', '4', '7', '9'], correct: '7', hint: 'Angka 7 seperti tongkat kakek yang bengkok!', audio: '7' },
-  { id: 10, question: 'Mana angka 10?', options: ['1', '0', '10', '11'], correct: '10', hint: 'Angka 10 adalah angka 1 yang bergandengan dengan 0!', audio: '10' },
-  { id: 11, question: 'Mana angka 11?', options: ['10', '11', '12', '21'], correct: '11', hint: 'Angka 11 adalah dua angka 1 yang berdiri sejajar!', audio: '11' },
-  { id: 12, question: 'Mana angka 12?', options: ['11', '12', '13', '21'], correct: '12', hint: 'Angka 12 adalah angka 1 yang berteman dengan 2!', audio: '12' },
-  { id: 13, question: 'Mana angka 13?', options: ['12', '13', '14', '31'], correct: '13', hint: 'Angka 13 adalah angka 1 yang berteman dengan 3!', audio: '13' },
-  { id: 14, question: 'Mana angka 15?', options: ['14', '15', '16', '51'], correct: '15', hint: 'Angka 15 adalah angka 1 yang berteman dengan 5!', audio: '15' },
-  { id: 15, question: 'Mana angka 20?', options: ['10', '20', '30', '02'], correct: '20', hint: 'Angka 20 adalah angka 2 yang berteman dengan 0!', audio: '20' }
+  { id: 1, question: 'Mana angka 5?', options: ['3', '5', '2', '8'], correct: '5', hint: 'Punya perut buncit dan pakai topi!', audio: '5' },
+  { id: 2, question: 'Mana angka 1?', options: ['1', '4', '7', '0'], correct: '1', hint: 'Tegak lurus seperti tiang lampu!', audio: '1' },
+  { id: 3, question: 'Mana angka 3?', options: ['2', '3', '8', '6'], correct: '3', hint: 'Seperti sayap burung yang sedang terbang!', audio: '3' },
+  { id: 4, question: 'Mana angka 8?', options: ['0', '9', '8', '6'], correct: '8', hint: 'Seperti kacamata yang ditumpuk!', audio: '8' },
+  { id: 5, question: 'Mana angka 2?', options: ['5', '2', '7', '3'], correct: '2', hint: 'Melengkung seperti leher angsa!', audio: '2' },
+  { id: 6, question: 'Mana angka 6?', options: ['9', '6', '0', '5'], correct: '6', hint: 'Punya perut bulat di bawah!', audio: '6' },
+  { id: 7, question: 'Mana angka 9?', options: ['6', '9', '8', '0'], correct: '9', hint: 'Punya kepala besar di atas!', audio: '9' },
+  { id: 8, question: 'Mana angka 4?', options: ['1', '7', '4', '2'], correct: '4', hint: 'Seperti kursi yang terbalik!', audio: '4' },
+  { id: 9, question: 'Mana angka 7?', options: ['1', '4', '7', '9'], correct: '7', hint: 'Seperti tongkat kakek yang bengkok!', audio: '7' },
+  { id: 10, question: 'Mana angka 10?', options: ['1', '0', '10', '11'], correct: '10', hint: 'Ada tiang lampu dan donat yang bergandengan!', audio: '10' },
+  { id: 11, question: 'Mana angka 11?', options: ['10', '11', '12', '21'], correct: '11', hint: 'Dua tiang lampu yang berdiri sejajar!', audio: '11' },
+  { id: 12, question: 'Mana angka 12?', options: ['11', '12', '13', '21'], correct: '12', hint: 'Ada tiang lampu yang berteman dengan leher angsa!', audio: '12' },
+  { id: 13, question: 'Mana angka 13?', options: ['12', '13', '14', '31'], correct: '13', hint: 'Ada tiang lampu yang berteman dengan sayap burung!', audio: '13' },
+  { id: 14, question: 'Mana angka 15?', options: ['14', '15', '16', '51'], correct: '15', hint: 'Ada tiang lampu yang berteman dengan si perut buncit bertopi!', audio: '15' },
+  { id: 15, question: 'Mana angka 20?', options: ['10', '20', '30', '02'], correct: '20', hint: 'Ada leher angsa yang berteman dengan donat!', audio: '20' }
 ];
 
 const fruitQuestions = [
@@ -119,13 +119,9 @@ const Games: React.FC = () => {
   const [earnedStars, setEarnedStars] = useState(0);
   const [shuffledQuestions, setShuffledQuestions] = useState<any[]>([]);
   
-  // Calculate Level based on stars
+  // Calculate Level based on stars (Aligned with Profile page: 50 stars per level)
   const getUserLevel = (stars: number) => {
-    if (stars >= 150) return 5;
-    if (stars >= 100) return 4;
-    if (stars >= 50) return 3;
-    if (stars >= 25) return 2;
-    return 1;
+    return Math.floor(stars / 50) + 1;
   };
 
   const userLevel = getUserLevel(user?.stars || 0);
