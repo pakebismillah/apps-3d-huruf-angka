@@ -4,38 +4,26 @@ import {
   IonPage, 
   IonHeader, 
   IonToolbar, 
-  IonButtons, 
   IonIcon,
   IonFooter,
   useIonRouter
 } from '@ionic/react';
 import { 
-  settingsOutline, 
   volumeHighOutline, 
   bulbOutline, 
   star, 
   checkmarkCircle, 
   closeCircle,
   homeOutline,
-  libraryOutline,
   gameControllerOutline,
   personOutline
 } from 'ionicons/icons';
-import { ref, onValue, update } from "firebase/database";
+import { ref, onValue, update, get, child } from "firebase/database";
 import { db } from "../firebase";
 import { motion, AnimatePresence } from 'framer-motion';
 import './Games.css';
 
 // ============ Audio Helper ============
-function playAudioFile(src: string): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const audio = new Audio(src);
-    audio.onended = () => resolve();
-    audio.onerror = () => reject(new Error('File not found'));
-    audio.play().catch(reject);
-  });
-}
-
 function speakText(text: string, lang = 'id-ID'): Promise<void> {
   return new Promise((resolve) => {
     if (!('speechSynthesis' in window)) { resolve(); return; }
@@ -49,8 +37,16 @@ function speakText(text: string, lang = 'id-ID'): Promise<void> {
   });
 }
 
+interface GameQuestion {
+  id: number;
+  question: string;
+  options: string[];
+  correct: string;
+  hint: string;
+  audio: string;
+}
 
-const letterQuestions = [
+const letterQuestions: GameQuestion[] = [
   { id: 1, question: 'Mana huruf B?', options: ['A', 'B', 'C', 'D'], correct: 'B', hint: 'Punya dua perut yang gendut di depan!', audio: 'B' },
   { id: 2, question: 'Mana huruf G?', options: ['G', 'F', 'H', 'J'], correct: 'G', hint: 'Seperti kepala kucing yang melingkar!', audio: 'G' },
   { id: 3, question: 'Mana huruf A?', options: ['V', 'M', 'A', 'N'], correct: 'A', hint: 'Seperti atap rumah yang runcing!', audio: 'A' },
@@ -73,7 +69,7 @@ const letterQuestions = [
   { id: 20, question: 'Mana huruf W?', options: ['W', 'M', 'V', 'N'], correct: 'W', hint: 'Seperti dua huruf V yang bergandengan!', audio: 'W' }
 ];
 
-const numberQuestions = [
+const numberQuestions: GameQuestion[] = [
   { id: 1, question: 'Mana angka 5?', options: ['3', '5', '2', '8'], correct: '5', hint: 'Punya perut buncit dan pakai topi!', audio: '5' },
   { id: 2, question: 'Mana angka 1?', options: ['1', '4', '7', '0'], correct: '1', hint: 'Tegak lurus seperti tiang lampu!', audio: '1' },
   { id: 3, question: 'Mana angka 3?', options: ['2', '3', '8', '6'], correct: '3', hint: 'Seperti sayap burung yang sedang terbang!', audio: '3' },
@@ -91,7 +87,7 @@ const numberQuestions = [
   { id: 15, question: 'Mana angka 20?', options: ['10', '20', '30', '02'], correct: '20', hint: 'Ada leher angsa yang berteman dengan donat!', audio: '20' }
 ];
 
-const fruitQuestions = [
+const fruitQuestions: GameQuestion[] = [
   { id: 1, question: 'Mana buah Apel?', options: ['🍎', '🍌', '🍊', '🍇'], correct: '🍎', hint: 'Apel biasanya berwarna merah dan bulat!', audio: 'apel' },
   { id: 2, question: 'Mana buah Pisang?', options: ['🍎', '🍌', '🍊', '🍍'], correct: '🍌', hint: 'Pisang berwarna kuning dan bentuknya panjang!', audio: 'pisang' },
   { id: 3, question: 'Mana buah Jeruk?', options: ['🥭', '🍉', '🍊', '🍓'], correct: '🍊', hint: 'Jeruk warnanya oranye dan rasanya segar!', audio: 'jeruk' },
@@ -99,7 +95,7 @@ const fruitQuestions = [
   { id: 5, question: 'Mana buah Anggur?', options: ['🍇', '🫐', '🍒', '🍓'], correct: '🍇', hint: 'Anggur itu kecil-kecil dan berkumpul banyak!', audio: 'anggur' }
 ];
 
-const animalQuestions = [
+const animalQuestions: GameQuestion[] = [
   { id: 1, question: 'Mana hewan Kucing?', options: ['🐱', '🐶', '🐭', '🐹'], correct: '🐱', hint: 'Kucing bunyinya meong-meong!', audio: 'kucing' },
   { id: 2, question: 'Mana hewan Gajah?', options: ['🐘', '🦒', '🦓', '🦏'], correct: '🐘', hint: 'Gajah punya belalai yang sangat panjang!', audio: 'gajah' },
   { id: 3, question: 'Mana hewan Singa?', options: ['🐯', '🦁', '🐻', '🐺'], correct: '🦁', hint: 'Singa adalah raja hutan yang pemberani!', audio: 'singa' },
@@ -117,14 +113,15 @@ const Games: React.FC = () => {
   const [user, setUser] = useState<any>(null);
   const [showVictory, setShowVictory] = useState(false);
   const [earnedStars, setEarnedStars] = useState(0);
-  const [shuffledQuestions, setShuffledQuestions] = useState<any[]>([]);
+  const [shuffledQuestions, setShuffledQuestions] = useState<GameQuestion[]>([]);
   
   // Calculate Level based on stars (Aligned with Profile page: 50 stars per level)
   const getUserLevel = (stars: number) => {
     return Math.floor(stars / 50) + 1;
   };
 
-  const userLevel = getUserLevel(user?.stars || 0);
+  const currentStars = user?.stars || 0;
+  const userLevel = getUserLevel(currentStars);
 
   const currentUserId = localStorage.getItem('cerdika_currentUser');
 
@@ -171,9 +168,12 @@ const Games: React.FC = () => {
       const timer = setTimeout(() => {
         speakText(q.question);
       }, 500);
-      return () => clearTimeout(timer);
+      return () => {
+        clearTimeout(timer);
+        window.speechSynthesis.cancel();
+      };
     }
-  }, [gameMode, currentIdx, q]); 
+  }, [gameMode, currentIdx, q]);
 
   const handleSelect = (opt: string) => {
     if (status !== 'idle') return;
@@ -192,9 +192,9 @@ const Games: React.FC = () => {
     }
   };
 
-  const nextQuestion = () => {
+  const nextQuestion = async () => {
     if (questions.length === 0) return;
-    
+
     if (currentIdx < questions.length - 1) {
       setCurrentIdx(c => c + 1);
       setSelected(null);
@@ -203,10 +203,16 @@ const Games: React.FC = () => {
       // Game Over - Save stars to Firebase
       const currentUserId = localStorage.getItem('cerdika_currentUser');
       if (currentUserId && user) {
-        const userRef = ref(db, "students/" + currentUserId);
-        update(userRef, {
-          stars: (user.stars || 0) + score
-        });
+        try {
+          const userRef = ref(db, "students/" + currentUserId);
+          const dbRef = ref(db);
+          const snapshot = await get(child(dbRef, `students/${currentUserId}`));
+          const latestStars = snapshot.exists() ? snapshot.val().stars || 0 : user.stars;
+          
+          await update(userRef, { stars: latestStars + score });
+        } catch (err) {
+          console.error("Gagal update bintang:", err);
+        }
       }
 
       setEarnedStars(score);
@@ -294,17 +300,17 @@ const Games: React.FC = () => {
 
                 {/* Level 2 */}
                 <motion.div 
-                  className={`mode-card card-numbers ${userLevel < 2 ? 'locked' : ''}`}
+                  className={`mode-card card-numbers ${currentStars < 25 ? 'locked' : ''}`}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => userLevel >= 2 && setGameMode('numbers')}
+                  onClick={() => currentStars >= 25 && setGameMode('numbers')}
                 >
                   <div className="mode-level-tag">Lvl 2</div>
                   <div className="mode-icon-box">
-                    <span className="mode-emoji">{userLevel < 2 ? '🔒' : '123'}</span>
+                    <span className="mode-emoji">{currentStars < 25 ? '🔒' : '123'}</span>
                   </div>
                   <div className="mode-text-content">
                     <h2 className="mode-card-title">Angka Ceria</h2>
-                    {userLevel < 2 ? (
+                    {currentStars < 25 ? (
                       <p className="mode-card-desc" style={{color: '#d32f2f'}}>Butuh 25 Bintang!</p>
                     ) : (
                       <p className="mode-card-desc">Ayo berhitung bersama!</p>
@@ -314,17 +320,17 @@ const Games: React.FC = () => {
 
                 {/* Level 3 */}
                 <motion.div 
-                  className={`mode-card card-green ${userLevel < 3 ? 'locked' : ''}`}
+                  className={`mode-card card-green ${currentStars < 50 ? 'locked' : ''}`}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => userLevel >= 3 && setGameMode('fruits')}
+                  onClick={() => currentStars >= 50 && setGameMode('fruits')}
                 >
                   <div className="mode-level-tag">Lvl 3</div>
                   <div className="mode-icon-box">
-                    <span className="mode-emoji">{userLevel < 3 ? '🔒' : '🍎'}</span>
+                    <span className="mode-emoji">{currentStars < 50 ? '🔒' : '🍎'}</span>
                   </div>
                   <div className="mode-text-content">
                     <h2 className="mode-card-title">Tebak Buah</h2>
-                    {userLevel < 3 ? (
+                    {currentStars < 50 ? (
                       <p className="mode-card-desc" style={{color: '#d32f2f'}}>Butuh 50 Bintang!</p>
                     ) : (
                       <p className="mode-card-desc">Mana ya buahnya?</p>
@@ -334,17 +340,17 @@ const Games: React.FC = () => {
 
                 {/* Level 4 */}
                 <motion.div 
-                  className={`mode-card card-red ${userLevel < 4 ? 'locked' : ''}`}
+                  className={`mode-card card-red ${currentStars < 100 ? 'locked' : ''}`}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => userLevel >= 4 && setGameMode('animals')}
+                  onClick={() => currentStars >= 100 && setGameMode('animals')}
                 >
                   <div className="mode-level-tag">Lvl 4</div>
                   <div className="mode-icon-box">
-                    <span className="mode-emoji">{userLevel < 4 ? '🔒' : '🦁'}</span>
+                    <span className="mode-emoji">{currentStars < 100 ? '🔒' : '🦁'}</span>
                   </div>
                   <div className="mode-text-content">
                     <h2 className="mode-card-title">Suara Hewan</h2>
-                    {userLevel < 4 ? (
+                    {currentStars < 100 ? (
                       <p className="mode-card-desc" style={{color: '#d32f2f'}}>Butuh 100 Bintang!</p>
                     ) : (
                       <p className="mode-card-desc">Siapa bunyi begitu?</p>
@@ -354,17 +360,17 @@ const Games: React.FC = () => {
 
                 {/* Level 5 */}
                 <motion.div 
-                  className={`mode-card card-purple ${userLevel < 5 ? 'locked' : ''}`}
+                  className={`mode-card card-purple ${currentStars < 150 ? 'locked' : ''}`}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => userLevel >= 5 && setGameMode('mixed')}
+                  onClick={() => currentStars >= 150 && setGameMode('mixed')}
                 >
                   <div className="mode-level-tag">Lvl 5</div>
                   <div className="mode-icon-box">
-                    <span className="mode-emoji">{userLevel < 5 ? '🔒' : '🏆'}</span>
+                    <span className="mode-emoji">{currentStars < 150 ? '🔒' : '🏆'}</span>
                   </div>
                   <div className="mode-text-content">
                     <h2 className="mode-card-title">Tantangan Super</h2>
-                    {userLevel < 5 ? (
+                    {currentStars < 150 ? (
                       <p className="mode-card-desc" style={{color: '#d32f2f'}}>Butuh 150 Bintang!</p>
                     ) : (
                       <p className="mode-card-desc">Campuran semua ilmu!</p>
