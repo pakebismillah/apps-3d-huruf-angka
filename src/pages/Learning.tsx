@@ -32,7 +32,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ref, update, get, child, onValue } from "firebase/database";
 import { db } from "../firebase";
 import { useParams, useLocation } from 'react-router-dom';
-import { createWorker, PSM } from 'tesseract.js';
 import './Learning.css';
 
 // ============ Audio Helper ============
@@ -296,12 +295,12 @@ const Learning: React.FC = () => {
   const [contentMode, setContentMode] = useState<'huruf' | 'angka'>('huruf');
   const [showPraise, setShowPraise] = useState(false);
   const [praiseText, setPraiseText] = useState('');
+  const [praiseType, setPraiseType] = useState<'success' | 'warning'>('success');
   const [isDrawing, setIsDrawing] = useState(false);
   const [showLetterSelector, setShowLetterSelector] = useState(false);
   const [stars, setStars] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [playingWord, setPlayingWord] = useState<string | null>(null);
-  const [isEvaluating, setIsEvaluating] = useState(false);
   
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [userAvatar, setUserAvatar] = useState('🐱');
@@ -510,8 +509,51 @@ const Learning: React.FC = () => {
   }, [playingWord, quest]);
 
   const handleFinishTracing = () => {
+    if (!hasDrawn) {
+      setPraiseText("Ayo tulis dulu!");
+      setPraiseType('warning');
+      setShowPraise(true);
+      setTimeout(() => setShowPraise(false), 1500);
+      return;
+    }
+
+    const canvas = canvasRef.current;
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      const imageData = ctx?.getImageData(0, 0, canvas.width, canvas.height);
+      const data = imageData?.data;
+      let pixelCount = 0;
+      if (data) {
+        for (let i = 3; i < data.length; i += 4) {
+          if (data[i] > 0) pixelCount++;
+        }
+      }
+      
+      if (pixelCount < 300) {
+        setPraiseText("Tulisannya belum selesai!");
+        setPraiseType('warning');
+        setShowPraise(true);
+        setTimeout(() => setShowPraise(false), 1500);
+        return;
+      }
+    }
+
     addStar();
     setPraiseText("Tulisanmu Bagus Banget!");
+    setPraiseType('success');
+    setShowPraise(true);
+    
+    // Auto move to next after 2 seconds
+    setTimeout(() => {
+      setShowPraise(false);
+      handleNext();
+    }, 2000);
+  };
+
+  const handleFinishDiscovery = () => {
+    addStar();
+    setPraiseText("Hebat! Kamu sudah belajar ini.");
+    setPraiseType('success');
     setShowPraise(true);
     
     // Auto move to next after 2 seconds
@@ -736,13 +778,9 @@ const Learning: React.FC = () => {
                       <IonIcon icon={trashOutline} />
                       <span>Hapus</span>
                     </button>
-                    <button 
-                      className={`control-btn done ${isEvaluating ? 'evaluating' : ''}`} 
-                      onClick={handleFinishTracing}
-                      disabled={isEvaluating}
-                    >
-                      <IonIcon icon={isEvaluating ? sparklesOutline : happyOutline} />
-                      <span>{isEvaluating ? 'Menilai...' : 'Selesai'}</span>
+                    <button className="control-btn done" onClick={handleFinishTracing}>
+                      <IonIcon icon={happyOutline} />
+                      <span>Selesai</span>
                     </button>
                   </div>
                 </div>
@@ -819,11 +857,23 @@ const Learning: React.FC = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
-              <div className="praise-popup">
-                <IonIcon icon={happyOutline} className="praise-icon-large" />
-                <h2>{praiseText}</h2>
-                <div className="stars-anim">⭐⭐⭐</div>
-              </div>
+              <motion.div 
+                className={`praise-popup popup-${praiseType}`}
+                initial={{ scale: 0.5, y: 50 }}
+                animate={{ scale: 1, y: 0 }}
+                exit={{ scale: 0.5, y: 50 }}
+              >
+                <div className="praise-icon-box">
+                  <IonIcon 
+                    icon={praiseType === 'success' ? happyOutline : gridOutline} 
+                    className="praise-icon-large" 
+                  />
+                </div>
+                <h2 className="praise-title">{praiseText}</h2>
+                {praiseType === 'success' && (
+                  <div className="stars-anim">✨✨✨</div>
+                )}
+              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
