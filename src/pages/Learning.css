@@ -553,3 +553,64 @@ ion-segment-button {
   max-height: 80vh;
 }
 
+/* Praise Overlay Styles */
+.praise-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  backdrop-filter: blur(10px);
+}
+
+.praise-overlay.wrong {
+  background: rgba(255, 235, 238, 0.95);
+}
+
+.praise-overlay.warning {
+  background: rgba(255, 248, 225, 0.95);
+}
+
+.praise-popup {
+  background: white;
+  padding: 40px;
+  border-radius: 40px;
+  border: 4px solid #1c1c1c;
+  box-shadow: 10px 10px 0 #1c1c1c;
+  text-align: center;
+  max-width: 80%;
+}
+
+.praise-icon-large {
+  font-size: 100px;
+  color: #4caf50;
+  margin-bottom: 20px;
+}
+
+.praise-icon-large.wrong {
+  color: #f44336;
+}
+
+.praise-icon-large.warning {
+  color: #ff9800;
+}
+
+.praise-popup h2 {
+  font-weight: 900;
+  font-size: 28px;
+  color: #1c1c1c;
+  margin: 0;
+}
+
+.stars-anim {
+  font-size: 30px;
+  margin-top: 15px;
+  letter-spacing: 5px;
+}
+
+

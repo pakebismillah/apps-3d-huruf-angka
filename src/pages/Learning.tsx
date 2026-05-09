@@ -26,7 +26,8 @@ import {
   arrowBackOutline,
   textOutline,
   calculatorOutline,
-  closeCircleOutline
+  closeCircleOutline,
+  alertCircleOutline
 } from 'ionicons/icons';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ref, update, get, child, onValue } from "firebase/database";
@@ -296,6 +297,7 @@ const Learning: React.FC = () => {
   const [contentMode, setContentMode] = useState<'huruf' | 'angka'>('huruf');
   const [showPraise, setShowPraise] = useState(false);
   const [praiseText, setPraiseText] = useState('');
+  const [praiseType, setPraiseType] = useState<'correct' | 'wrong' | 'warning'>('correct');
   const [isDrawing, setIsDrawing] = useState(false);
   const [showLetterSelector, setShowLetterSelector] = useState(false);
   const [stars, setStars] = useState(0);
@@ -497,9 +499,6 @@ const Learning: React.FC = () => {
   const playWord = useCallback(async (word: { text: string; audio: string }) => {
     if (playingWord || !quest) return;
     setPlayingWord(word.audio);
-    setPraiseText(`Hebat! ${word.text}`);
-    setShowPraise(true);
-    setTimeout(() => setShowPraise(false), 1500);
 
     try {
       await playAudioFile(`/assets/audio/kata_${word.audio}.mp3`);
@@ -509,12 +508,93 @@ const Learning: React.FC = () => {
     setPlayingWord(null);
   }, [playingWord, quest]);
 
-  const handleFinishTracing = () => {
+  const handleFinishTracing = async () => {
+    if (!canvasRef.current || isEvaluating) return;
+    
+    setIsEvaluating(true);
+    
+    try {
+      const canvas = canvasRef.current;
+      const offCanvas = document.createElement('canvas');
+      offCanvas.width = canvas.width;
+      offCanvas.height = canvas.height;
+      const ctx = offCanvas.getContext('2d');
+      if (!ctx) throw new Error("No context");
+      
+      // 1. Gambar ulang dari canvas utama (coretan anak)
+      ctx.drawImage(canvas, 0, 0);
+      
+      // 2. Ubah semua coretan (biru) menjadi hitam pekat agar kontras
+      ctx.globalCompositeOperation = 'source-in';
+      ctx.fillStyle = '#000000';
+      ctx.fillRect(0, 0, offCanvas.width, offCanvas.height);
+      
+      // 3. Beri latar belakang putih pekat di belakang coretan
+      ctx.globalCompositeOperation = 'destination-over';
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(0, 0, offCanvas.width, offCanvas.height);
+      
+      // Kembalikan composite operation ke default
+      ctx.globalCompositeOperation = 'source-over';
+      
+      // Gunakan Tesseract untuk membaca tulisan
+      const worker = await createWorker('eng');
+      await worker.setParameters({
+        tessedit_pageseg_mode: PSM.SINGLE_CHAR, // Single character mode
+      });
+      
+      const { data: { text } } = await worker.recognize(offCanvas);
+      await worker.terminate();
+      
+      const recognizedText = text.trim().toUpperCase();
+      const targetLetter = quest.letter.toUpperCase();
+      
+      console.log("Recognized:", recognizedText, "Target:", targetLetter);
+      
+      // Cek apakah hasil deteksi mengandung target huruf/angka
+      if (recognizedText.includes(targetLetter) || recognizedText === targetLetter) {
+        addStar();
+        setPraiseType('correct');
+        setPraiseText("Hebat! Bentuknya Benar!");
+        setShowPraise(true);
+        
+        setTimeout(() => {
+          setShowPraise(false);
+          handleNext();
+        }, 2000);
+      } else {
+        setPraiseType('wrong');
+        setPraiseText("Hampir! Ayo coba perbaiki lagi.");
+        setShowPraise(true);
+        
+        setTimeout(() => {
+          setShowPraise(false);
+          clearCanvas(); // Otomatis hapus coretan sebelumnya jika salah
+        }, 2000);
+      }
+      
+    } catch (error) {
+      console.error("OCR Error:", error);
+      // Fallback jika ML gagal karena suatu hal
+      addStar();
+      setPraiseType('correct');
+      setPraiseText("Bagus Sekali!");
+      setShowPraise(true);
+      setTimeout(() => {
+        setShowPraise(false);
+        handleNext();
+      }, 2000);
+    } finally {
+      setIsEvaluating(false);
+    }
+  };
+
+  const handleFinishDiscovery = () => {
     addStar();
-    setPraiseText("Tulisanmu Bagus Banget!");
+    setPraiseType('correct');
+    setPraiseText(`Hebat! Kamu sudah mengenal ${quest.letter}`);
     setShowPraise(true);
     
-    // Auto move to next after 2 seconds
     setTimeout(() => {
       setShowPraise(false);
       handleNext();
@@ -820,9 +900,16 @@ const Learning: React.FC = () => {
               exit={{ opacity: 0 }}
             >
               <div className="praise-popup">
-                <IonIcon icon={happyOutline} className="praise-icon-large" />
+                <IonIcon 
+                  icon={
+                    praiseType === 'correct' ? happyOutline : 
+                    praiseType === 'warning' ? alertCircleOutline : 
+                    closeCircleOutline
+                  } 
+                  className={`praise-icon-large ${praiseType}`} 
+                />
                 <h2>{praiseText}</h2>
-                <div className="stars-anim">⭐⭐⭐</div>
+                {praiseType === 'correct' && <div className="stars-anim">⭐⭐⭐</div>}
               </div>
             </motion.div>
           )}
