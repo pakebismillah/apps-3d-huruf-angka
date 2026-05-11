@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  IonContent, 
-  IonPage, 
-  IonHeader, 
-  IonToolbar, 
+import {
+  IonContent,
+  IonPage,
+  IonHeader,
+  IonToolbar,
   IonIcon,
   IonFooter,
   useIonRouter
 } from '@ionic/react';
-import { 
-  volumeHighOutline, 
-  bulbOutline, 
-  star, 
-  checkmarkCircle, 
+import {
+  volumeHighOutline,
+  bulbOutline,
+  star,
+  checkmarkCircle,
   closeCircle,
   homeOutline,
   gameControllerOutline,
@@ -114,7 +114,7 @@ const Games: React.FC = () => {
   const [showVictory, setShowVictory] = useState(false);
   const [earnedStars, setEarnedStars] = useState(0);
   const [shuffledQuestions, setShuffledQuestions] = useState<GameQuestion[]>([]);
-  
+
   // Calculate Level based on stars (Aligned with Profile page: 50 stars per level)
   const getUserLevel = (stars: number) => {
     return Math.floor(stars / 50) + 1;
@@ -123,7 +123,7 @@ const Games: React.FC = () => {
   const currentStars = user?.stars || 0;
   const userLevel = getUserLevel(currentStars);
 
-  const currentUserId = localStorage.getItem('cerdika_currentUser');
+  const currentUserId = localStorage.getItem('Tadika_currentUser');
 
   useEffect(() => {
     if (currentUserId) {
@@ -158,7 +158,7 @@ const Games: React.FC = () => {
       setShuffledQuestions(shuffled);
       setCurrentIdx(0);
     } else {
-        setShuffledQuestions([]);
+      setShuffledQuestions([]);
     }
   }, [gameMode]);
 
@@ -177,7 +177,7 @@ const Games: React.FC = () => {
 
   const handleSelect = (opt: string) => {
     if (status !== 'idle') return;
-    
+
     setSelected(opt);
     if (opt === q.correct) {
       setStatus('correct');
@@ -201,14 +201,14 @@ const Games: React.FC = () => {
       setStatus('idle');
     } else {
       // Game Over - Save stars to Firebase
-      const currentUserId = localStorage.getItem('cerdika_currentUser');
+      const currentUserId = localStorage.getItem('Tadika_currentUser');
       if (currentUserId && user) {
         try {
           const userRef = ref(db, "students/" + currentUserId);
           const dbRef = ref(db);
           const snapshot = await get(child(dbRef, `students/${currentUserId}`));
           const latestStars = snapshot.exists() ? snapshot.val().stars || 0 : user.stars;
-          
+
           await update(userRef, { stars: latestStars + score });
         } catch (err) {
           console.error("Gagal update bintang:", err);
@@ -235,9 +235,9 @@ const Games: React.FC = () => {
         <IonToolbar className="app-toolbar-v2">
           <div className="header-container-v2">
             <div className="header-left">
-              <motion.div 
-                className="logo-circle-v2" 
-                style={{backgroundColor: user?.avatarColor || '#FFD54F'}}
+              <motion.div
+                className="logo-circle-v2"
+                style={{ backgroundColor: user?.avatarColor || '#FFD54F' }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => router.push('/profile')}
               >
@@ -253,7 +253,7 @@ const Games: React.FC = () => {
                 </div>
               </div>
             </div>
-            
+
             <div className="header-right">
             </div>
           </div>
@@ -267,7 +267,7 @@ const Games: React.FC = () => {
 
               <div className="mode-options">
                 {/* Level 1 */}
-                <motion.div 
+                <motion.div
                   className="mode-card card-letters"
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setGameMode('letters')}
@@ -282,7 +282,7 @@ const Games: React.FC = () => {
                 </motion.div>
 
                 {/* Level 2 */}
-                <motion.div 
+                <motion.div
                   className={`mode-card card-numbers ${currentStars < 25 ? 'locked' : ''}`}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => currentStars >= 25 && setGameMode('numbers')}
@@ -293,7 +293,7 @@ const Games: React.FC = () => {
                   <div className="mode-text-content">
                     <h2 className="mode-card-title">Angka Ceria</h2>
                     {currentStars < 25 ? (
-                      <p className="mode-card-desc" style={{color: '#d32f2f'}}>Butuh 25 Bintang!</p>
+                      <p className="mode-card-desc" style={{ color: '#d32f2f' }}>Butuh 25 Bintang!</p>
                     ) : (
                       <p className="mode-card-desc">Ayo berhitung bersama!</p>
                     )}
@@ -301,7 +301,7 @@ const Games: React.FC = () => {
                 </motion.div>
 
                 {/* Level 3 */}
-                <motion.div 
+                <motion.div
                   className={`mode-card card-green ${currentStars < 50 ? 'locked' : ''}`}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => currentStars >= 50 && setGameMode('fruits')}
@@ -312,7 +312,7 @@ const Games: React.FC = () => {
                   <div className="mode-text-content">
                     <h2 className="mode-card-title">Tebak Buah</h2>
                     {currentStars < 50 ? (
-                      <p className="mode-card-desc" style={{color: '#d32f2f'}}>Butuh 50 Bintang!</p>
+                      <p className="mode-card-desc" style={{ color: '#d32f2f' }}>Butuh 50 Bintang!</p>
                     ) : (
                       <p className="mode-card-desc">Mana ya buahnya?</p>
                     )}
@@ -320,7 +320,7 @@ const Games: React.FC = () => {
                 </motion.div>
 
                 {/* Level 4 */}
-                <motion.div 
+                <motion.div
                   className={`mode-card card-red ${currentStars < 100 ? 'locked' : ''}`}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => currentStars >= 100 && setGameMode('animals')}
@@ -331,7 +331,7 @@ const Games: React.FC = () => {
                   <div className="mode-text-content">
                     <h2 className="mode-card-title">Suara Hewan</h2>
                     {currentStars < 100 ? (
-                      <p className="mode-card-desc" style={{color: '#d32f2f'}}>Butuh 100 Bintang!</p>
+                      <p className="mode-card-desc" style={{ color: '#d32f2f' }}>Butuh 100 Bintang!</p>
                     ) : (
                       <p className="mode-card-desc">Siapa bunyi begitu?</p>
                     )}
@@ -339,7 +339,7 @@ const Games: React.FC = () => {
                 </motion.div>
 
                 {/* Level 5 */}
-                <motion.div 
+                <motion.div
                   className={`mode-card card-purple ${currentStars < 150 ? 'locked' : ''}`}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => currentStars >= 150 && setGameMode('mixed')}
@@ -350,7 +350,7 @@ const Games: React.FC = () => {
                   <div className="mode-text-content">
                     <h2 className="mode-card-title">Tantangan Super</h2>
                     {currentStars < 150 ? (
-                      <p className="mode-card-desc" style={{color: '#d32f2f'}}>Butuh 150 Bintang!</p>
+                      <p className="mode-card-desc" style={{ color: '#d32f2f' }}>Butuh 150 Bintang!</p>
                     ) : (
                       <p className="mode-card-desc">Campuran semua ilmu!</p>
                     )}
@@ -366,7 +366,7 @@ const Games: React.FC = () => {
                   <span>Soal {currentIdx + 1}/{questions.length}</span>
                 </div>
                 <div className="progress-bar-container">
-                  <motion.div 
+                  <motion.div
                     className="progress-bar-fill"
                     initial={{ width: 0 }}
                     animate={{ width: `${((currentIdx + 1) / questions.length) * 100}%` }}
@@ -376,7 +376,7 @@ const Games: React.FC = () => {
 
               <div className="question-section">
                 <div className="question-header-row">
-                  <motion.button 
+                  <motion.button
                     className="replay-audio-btn-large"
                     whileTap={{ scale: 0.9 }}
                     onClick={() => speakText(q.question)}
@@ -413,7 +413,7 @@ const Games: React.FC = () => {
               </div>
 
               {/* Hint Box */}
-              <motion.div 
+              <motion.div
                 className="hint-box"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -446,13 +446,13 @@ const Games: React.FC = () => {
         {/* Victory Modal Overlay */}
         <AnimatePresence>
           {showVictory && (
-            <motion.div 
+            <motion.div
               className="victory-overlay"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
-              <motion.div 
+              <motion.div
                 className="victory-card"
                 initial={{ scale: 0.5, y: 100 }}
                 animate={{ scale: 1, y: 0 }}
@@ -462,7 +462,7 @@ const Games: React.FC = () => {
                 <div className="victory-crown">👑</div>
                 <h1 className="victory-title">Luar Biasa!</h1>
                 <p className="victory-subtitle">Kamu telah menyelesaikan permainan</p>
-                
+
                 <div className="victory-stats">
                   <div className="stat-item">
                     <div className="stat-icon-circle">
@@ -491,16 +491,16 @@ const Games: React.FC = () => {
 
       <IonFooter className="ion-no-border home-footer">
         <div className="nav-bar">
-          <motion.div 
-            className="nav-item" 
+          <motion.div
+            className="nav-item"
             whileTap={{ scale: 0.9 }}
             onClick={() => router.push('/home')}
           >
             <IonIcon icon={homeOutline} />
             <span>Beranda</span>
           </motion.div>
-          <motion.div 
-            className="nav-item active" 
+          <motion.div
+            className="nav-item active"
             initial={false}
             animate={{ y: -5 }}
             onClick={() => router.push('/games')}
@@ -509,8 +509,8 @@ const Games: React.FC = () => {
             <span>Bermain</span>
             <motion.div className="nav-indicator" layoutId="nav-indicator" />
           </motion.div>
-          <motion.div 
-            className="nav-item" 
+          <motion.div
+            className="nav-item"
             whileTap={{ scale: 0.9 }}
             onClick={() => router.push('/profile')}
           >

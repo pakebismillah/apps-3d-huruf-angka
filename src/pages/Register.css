@@ -17,34 +17,14 @@
   margin-bottom: 20px;
 }
 
-.small-logo-badge {
-  width: 70px;
-  height: 70px;
-  background-color: white;
-  border-radius: 50%;
-  border: 3px solid #1c1c1c;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 2px 2px 0px #1c1c1c;
-}
-
-.small-logo-badge img {
-  width: 45px;
-  height: 45px;
+.brand-logo-register {
+  width: 120px;
+  height: 120px;
   object-fit: contain;
-}
-
-.logo-label {
-  background-color: #1c1c1c;
-  color: #FFD740;
-  font-family: 'Inter', sans-serif;
-  font-weight: 800;
-  font-size: 14px;
-  padding: 4px 12px;
-  border-radius: 8px;
-  margin-top: -10px;
-  z-index: 2;
+  margin-bottom: 25px;
+  transform: rotate(-3deg);
+  border-radius: 30px;
+  overflow: hidden;
 }
 
 .card-container {

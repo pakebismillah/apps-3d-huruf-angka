@@ -13,7 +13,7 @@ const Loading: React.FC = () => {
       setProgress((prev) => {
         if (prev >= 100) {
           clearInterval(timer);
-          sessionStorage.setItem('cerdika_loaded', 'true');
+          sessionStorage.setItem('Tadika_loaded', 'true');
           router.push('/profiles', 'forward', 'replace');
           return 100;
         }
@@ -32,26 +32,22 @@ const Loading: React.FC = () => {
           <div className="corner-blob top-left"></div>
           <div className="corner-blob top-right"></div>
           <div className="corner-blob bottom-right"></div>
-          
+
           <div className="loading-main-v2">
             {/* Logo Area (Empty for now) */}
-            <div className="logo-placeholder-v2">
-              <div className="logo-circle-v2">
-                <div className="logo-inner-ring">
-                  <div className="brand-text-v2">CERDIKA</div>
-                </div>
-              </div>
+            <div className="logo-container-v2">
+              <img src="/assets/images/logo.png" alt="Tadika Logo" className="loading-logo-img" />
             </div>
 
             {/* Progress Section */}
             <div className="loading-progress-v2">
               <div className="bar-container-v2">
-                <div 
-                  className="bar-fill-v2" 
+                <div
+                  className="bar-fill-v2"
                   style={{ width: `${progress}%` }}
                 ></div>
               </div>
-              <p className="loading-label-v2">Loading... <span>🔄</span></p>
+              <p className="loading-label-v2">Loading...</p>
             </div>
           </div>
         </div>

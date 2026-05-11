@@ -18,7 +18,7 @@
   -webkit-backdrop-filter: blur(15px);
   border-radius: 24px;
   border: 1px solid rgba(255, 255, 255, 0.5);
-  box-shadow: 
+  box-shadow:
     0 4px 15px rgba(0, 0, 0, 0.05),
     inset 0 0 0 1px rgba(255, 255, 255, 0.3);
   overflow: hidden;
@@ -45,9 +45,9 @@
   align-items: center;
   justify-content: center;
   position: relative;
-  box-shadow: 
+  box-shadow:
     0 4px 10px rgba(0, 0, 0, 0.1),
-    inset 0 -3px 0 rgba(0,0,0,0.1);
+    inset 0 -3px 0 rgba(0, 0, 0, 0.1);
   transform: rotate(-2deg);
 }
 
@@ -64,7 +64,7 @@
   height: 15px;
   background: white;
   mask: radial-gradient(circle, #fff 20%, transparent 20%),
-        radial-gradient(circle, #fff 20%, transparent 20%);
+    radial-gradient(circle, #fff 20%, transparent 20%);
   mask-size: 100% 100%;
   opacity: 0.8;
 }
@@ -140,7 +140,7 @@
   color: #1c1c1c;
   position: relative;
   cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 }
 
 .avatar-dot {
@@ -160,25 +160,7 @@
   gap: 12px;
 }
 
-.brand-logo-container {
-  width: 55px;
-  height: 55px;
-  border-radius: 18px;
-  border: 3px solid #1c1c1c;
-  background-color: #FFF9C4;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  box-shadow: 3px 3px 0px #1c1c1c;
-  transform: rotate(-3deg);
-}
 
-.brand-logo-container img {
-  width: 40px;
-  height: 40px;
-  object-fit: contain;
-}
 
 .brand-name {
   font-family: 'Inter', sans-serif;
@@ -302,10 +284,23 @@
   transform: scale(0.98);
 }
 
-.card-yellow { background-color: #FFD54F; }
-.card-blue { background-color: #64B5F6; }
-.card-green { background-color: #E8F5E9; border-color: #2E7D32; }
-.card-red { background-color: #FFEBEE; border-color: #C62828; }
+.card-yellow {
+  background-color: #FFD54F;
+}
+
+.card-blue {
+  background-color: #64B5F6;
+}
+
+.card-green {
+  background-color: #E8F5E9;
+  border-color: #2E7D32;
+}
+
+.card-red {
+  background-color: #FFEBEE;
+  border-color: #C62828;
+}
 
 .card-top {
   display: flex;
@@ -339,7 +334,7 @@
 .card-desc {
   font-size: 15px;
   font-weight: 700;
-  color: rgba(0,0,0,0.6);
+  color: rgba(0, 0, 0, 0.6);
   margin: 0 0 20px 0;
   max-width: 80%;
 }
@@ -350,7 +345,7 @@
   right: -20px;
   width: 120px;
   height: 120px;
-  background-color: rgba(255,255,255,0.3);
+  background-color: rgba(255, 255, 255, 0.3);
   border: 3px solid #1c1c1c;
   border-radius: 50%;
   display: flex;
@@ -358,10 +353,21 @@
   justify-content: center;
 }
 
-.illust-yellow { background-color: #FFF9C4; }
-.illust-blue { background-color: #E3F2FD; }
-.illust-green { background-color: #C8E6C9; }
-.illust-red { background-color: #FFCDD2; }
+.illust-yellow {
+  background-color: #FFF9C4;
+}
+
+.illust-blue {
+  background-color: #E3F2FD;
+}
+
+.illust-green {
+  background-color: #C8E6C9;
+}
+
+.illust-red {
+  background-color: #FFCDD2;
+}
 
 .illust-content {
   display: flex;
@@ -517,7 +523,8 @@
 
 .nav-item.active ion-icon {
   font-size: 35px;
-  background: #FFD54F; /* Cerdika Yellow */
+  background: #FFD54F;
+  /* Tadika Yellow */
   border: 4px solid #1c1c1c;
   border-radius: 50%;
   padding: 12px;
@@ -531,5 +538,10 @@
 }
 
 /* Page specific active colors */
-.nav-item:nth-child(2).active ion-icon { background: #64B5F6; }
-.nav-item:nth-child(3).active ion-icon { background: #81C784; }
+.nav-item:nth-child(2).active ion-icon {
+  background: #64B5F6;
+}
+
+.nav-item:nth-child(3).active ion-icon {
+  background: #81C784;
+}

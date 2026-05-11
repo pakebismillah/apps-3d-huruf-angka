@@ -62,17 +62,14 @@
   margin-bottom: 50px;
 }
 
-.brand-badge-v2 {
-  display: inline-block;
-  background: #1c1c1c;
-  color: white;
-  padding: 8px 20px;
-  border-radius: 12px;
-  font-weight: 900;
-  font-size: 14px;
+.brand-logo-profiles {
+  width: 140px;
+  height: 140px;
+  object-fit: contain;
   margin-bottom: 15px;
-  letter-spacing: 2px;
   transform: rotate(-2deg);
+  border-radius: 35px;
+  overflow: hidden;
 }
 
 .main-title-v2 {

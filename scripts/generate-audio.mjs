@@ -1,5 +1,5 @@
 /**
- * Script generate audio TTS (ElevenLabs) untuk Cerdika
+ * Script generate audio TTS (ElevenLabs) untuk Tadika
  * 
  * Jalankan:
  *   node scripts/generate-audio.mjs
@@ -208,7 +208,7 @@ async function generateAudio(teks, fileName) {
 }
 
 async function main() {
-  console.log(`\n🎙️  Cerdika Audio Generator`);
+  console.log(`\n🎙️  Tadika Audio Generator`);
   console.log(`📂 Output: ${OUTPUT_DIR}`);
   console.log(`🔢 Total: ${allItems.length} files\n`);
 

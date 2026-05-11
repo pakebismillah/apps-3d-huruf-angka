@@ -159,6 +159,27 @@ ion-button {
   box-shadow: 3px 3px 0 #1c1c1c;
 }
 
+.brand-logo-container {
+  width: 50px;
+  height: 50px;
+  border-radius: 16px;
+  border: 3px solid #1c1c1c;
+  background-color: #FFF9C4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: 3px 3px 0px #1c1c1c;
+  transform: rotate(-3deg);
+  cursor: pointer;
+}
+
+.brand-logo-container img {
+  width: 35px;
+  height: 35px;
+  object-fit: contain;
+}
+
 .header-app-name {
   font-size: 20px;
   font-weight: 900;

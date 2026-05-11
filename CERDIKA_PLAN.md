@@ -1,12 +1,12 @@
-# 🐿️ Rencana Proyek Cerdika: Aplikasi Edukasi Anak Pintar
+# 🐿️ Rencana Proyek Tadika: Aplikasi Edukasi Anak Pintar
 
-Dokumen ini merangkum seluruh perencanaan desain, pedoman visual (Design System), karakter maskot, serta tahapan (roadmap) pengembangan aplikasi edukasi "Cerdika". Dokumen ini akan menjadi acuan utama kita selama proses pembuatan aplikasi.
+Dokumen ini merangkum seluruh perencanaan desain, pedoman visual (Design System), karakter maskot, serta tahapan (roadmap) pengembangan aplikasi edukasi "Tadika". Dokumen ini akan menjadi acuan utama kita selama proses pembuatan aplikasi.
 
 ---
 
 ## 🎨 1. Pedoman Visual (Design System)
 
-Tujuan utama dari desain Cerdika adalah menciptakan antarmuka yang **premium, ramah anak, dan *bubbly*** (membal dan tidak kaku). Kita menghindari desain kaku dan menggantinya dengan efek tombol membulat, gradasi lembut, dan bayangan 3D (*soft drop shadows*).
+Tujuan utama dari desain Tadika adalah menciptakan antarmuka yang **premium, ramah anak, dan *bubbly*** (membal dan tidak kaku). Kita menghindari desain kaku dan menggantinya dengan efek tombol membulat, gradasi lembut, dan bayangan 3D (*soft drop shadows*).
 
 ### Palet Warna (Color Palette)
 Kita menggunakan warna pastel cerah yang tidak membuat mata anak cepat lelah, dikombinasikan dengan warna teks yang tegas.
@@ -67,4 +67,4 @@ Berikut adalah langkah-langkah yang sedang dan akan kita kerjakan:
 
 ---
 
-> *"Tujuan Cerdika adalah menciptakan ruang belajar mandiri di mana anak tidak merasa sedang belajar, melainkan sedang bermain dengan buku ajaib."*
+> *"Tujuan Tadika adalah menciptakan ruang belajar mandiri di mana anak tidak merasa sedang belajar, melainkan sedang bermain dengan buku ajaib."*

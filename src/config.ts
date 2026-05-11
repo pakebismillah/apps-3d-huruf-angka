@@ -1,5 +1,5 @@
 /**
- * Centralized Configuration for Cerdika
+ * Centralized Configuration for Tadika
  * All sensitive keys are loaded from environment variables
  */
 

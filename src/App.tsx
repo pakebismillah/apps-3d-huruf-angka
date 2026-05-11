@@ -34,7 +34,7 @@ setupIonicReact();
 const App: React.FC = () => {
   useEffect(() => {
     // Force show loading on refresh or first visit by checking sessionStorage
-    const hasLoaded = sessionStorage.getItem('cerdika_loaded');
+    const hasLoaded = sessionStorage.getItem('Tadika_loaded');
     if (!hasLoaded && window.location.pathname !== '/loading') {
       window.location.replace('/loading');
     }
