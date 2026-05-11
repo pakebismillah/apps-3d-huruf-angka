@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { 
-  IonContent, 
-  IonPage, 
-  IonHeader, 
-  IonToolbar, 
-  IonButtons, 
+import {
+  IonContent,
+  IonPage,
+  IonHeader,
+  IonToolbar,
+  IonButtons,
   IonIcon,
   useIonRouter,
   IonSegment,
@@ -12,10 +12,10 @@ import {
   IonLabel,
   IonModal
 } from '@ionic/react';
-import { 
-  volumeMediumOutline, 
+import {
+  volumeMediumOutline,
   volumeHighOutline,
-  chevronBackOutline, 
+  chevronBackOutline,
   chevronForwardOutline,
   star,
   happyOutline,
@@ -82,132 +82,132 @@ interface Quest {
 
 const quests: Quest[] = [
   // Letters A-Z
-  { 
+  {
     id: 'A', letter: 'A', smallLetter: 'a', title: 'A UNTUK APEL', subtitle: 'Mari belajar mengenal huruf A!', bgColor: '#FFF9C4',
     words: [{ text: 'APEL', phonetic: 'A-pel', emoji: '🍎', audio: 'apel', type: 'Buah' }, { text: 'AYAM', phonetic: 'A-yam', emoji: '🐔', audio: 'ayam', type: 'Hewan' }],
     funFact: 'Apel itu sehat dan bikin kita kuat!', type: 'Huruf', category: 'letters'
   },
-  { 
+  {
     id: 'B', letter: 'B', smallLetter: 'b', title: 'B UNTUK BUKU', subtitle: 'Mari belajar mengenal huruf B!', bgColor: '#E3F2FD',
     words: [{ text: 'BENGKUANG', phonetic: 'Beng-ku-ang', emoji: '🥔', audio: 'bengkuang', type: 'Buah' }, { text: 'BEBEK', phonetic: 'Be-bek', emoji: '🦆', audio: 'bebek', type: 'Hewan' }],
     funFact: 'Membaca buku bikin kita jadi pintar!', type: 'Huruf', category: 'letters'
   },
-  { 
+  {
     id: 'C', letter: 'C', smallLetter: 'c', title: 'C UNTUK CERI', subtitle: 'Mari belajar mengenal huruf C!', bgColor: '#FFEBEE',
     words: [{ text: 'CERI', phonetic: 'Ce-ri', emoji: '🍒', audio: 'ceri', type: 'Buah' }, { text: 'CICAK', phonetic: 'Ci-cak', emoji: '🦎', audio: 'cicak', type: 'Hewan' }],
     funFact: 'Ceri rasanya manis dan enak!', type: 'Huruf', category: 'letters'
   },
-  { 
+  {
     id: 'D', letter: 'D', smallLetter: 'd', title: 'D UNTUK DURIAN', subtitle: 'Mari belajar mengenal huruf D!', bgColor: '#F1F8E9',
     words: [{ text: 'DURIAN', phonetic: 'Du-ri-an', emoji: '🍈', audio: 'durian', type: 'Buah' }, { text: 'DOMBA', phonetic: 'Dom-ba', emoji: '🐑', audio: 'domba', type: 'Hewan' }],
     funFact: 'Durian adalah raja buah-buahan!', type: 'Huruf', category: 'letters'
   },
-  { 
+  {
     id: 'E', letter: 'E', smallLetter: 'e', title: 'E UNTUK ELANG', subtitle: 'Mari belajar mengenal huruf E!', bgColor: '#E8EAF6',
     words: [{ text: 'ELANG', phonetic: 'E-lang', emoji: '🦅', audio: 'elang', type: 'Hewan' }, { text: 'ES KRIM', phonetic: 'Es-krim', emoji: '🍦', audio: 'eskrim', type: 'Camilan' }],
     funFact: 'Elang bisa terbang sangat tinggi!', type: 'Huruf', category: 'letters'
   },
-  { 
+  {
     id: 'F', letter: 'F', smallLetter: 'f', title: 'F UNTUK FLAMINGO', subtitle: 'Mari belajar mengenal huruf F!', bgColor: '#FCE4EC',
     words: [{ text: 'FLAMINGO', phonetic: 'Fla-min-go', emoji: '🦩', audio: 'flamingo', type: 'Hewan' }, { text: 'FERI', phonetic: 'Fe-ri', emoji: '⛴️', audio: 'feri', type: 'Kendaraan' }],
     funFact: 'Flamingo suka berdiri dengan satu kaki!', type: 'Huruf', category: 'letters'
   },
-  { 
+  {
     id: 'G', letter: 'G', smallLetter: 'g', title: 'G UNTUK GAJAH', subtitle: 'Mari belajar mengenal huruf G!', bgColor: '#EFEBE9',
     words: [{ text: 'GAJAH', phonetic: 'Ga-jah', emoji: '🐘', audio: 'gajah', type: 'Hewan' }, { text: 'GANDARIA', phonetic: 'Gan-da-ri-a', emoji: '🥭', audio: 'gandaria', type: 'Buah' }],
     funFact: 'Gajah punya belalai yang panjang!', type: 'Huruf', category: 'letters'
   },
-  { 
+  {
     id: 'H', letter: 'H', smallLetter: 'h', title: 'H UNTUK HARIMAU', subtitle: 'Mari belajar mengenal huruf H!', bgColor: '#FFF3E0',
     words: [{ text: 'HARIMAU', phonetic: 'Ha-ri-mau', emoji: '🐯', audio: 'harimau', type: 'Hewan' }, { text: 'HUTAN', phonetic: 'Hu-tan', emoji: '🌳', audio: 'hutan', type: 'Alam' }],
     funFact: 'Harimau punya garis-garis di badannya!', type: 'Huruf', category: 'letters'
   },
-  { 
+  {
     id: 'I', letter: 'I', smallLetter: 'i', title: 'I UNTUK IKAN', subtitle: 'Mari belajar mengenal huruf I!', bgColor: '#E1F5FE',
     words: [{ text: 'IKAN', phonetic: 'I-kan', emoji: '🐟', audio: 'ikan', type: 'Hewan' }, { text: 'IGLO', phonetic: 'Ig-lo', emoji: '🧊', audio: 'iglo', type: 'Bangunan' }],
     funFact: 'Ikan bernapas di dalam air!', type: 'Huruf', category: 'letters'
   },
-  { 
+  {
     id: 'J', letter: 'J', smallLetter: 'j', title: 'J UNTUK JERUK', subtitle: 'Mari belajar mengenal huruf J!', bgColor: '#FFF3E0',
     words: [{ text: 'JERUK', phonetic: 'Je-ruk', emoji: '🍊', audio: 'jeruk', type: 'Buah' }, { text: 'JERAPAH', phonetic: 'Je-ra-pah', emoji: '🦒', audio: 'jerapah', type: 'Hewan' }],
     funFact: 'Jeruk mengandung banyak vitamin C!', type: 'Huruf', category: 'letters'
   },
-  { 
+  {
     id: 'K', letter: 'K', smallLetter: 'k', title: 'K UNTUK KUCING', subtitle: 'Mari belajar mengenal huruf K!', bgColor: '#F3E5F5',
     words: [{ text: 'KUCING', phonetic: 'Ku-cing', emoji: '🐱', audio: 'kucing', type: 'Hewan' }, { text: 'KELAPA', phonetic: 'Ke-la-pa', emoji: '🥥', audio: 'kelapa', type: 'Buah' }],
     funFact: 'Kucing suka sekali makan ikan!', type: 'Huruf', category: 'letters'
   },
-  { 
+  {
     id: 'L', letter: 'L', smallLetter: 'l', title: 'L UNTUK LECI', subtitle: 'Mari belajar mengenal huruf L!', bgColor: '#E0F2F1',
     words: [{ text: 'LECI', phonetic: 'Le-ci', emoji: '🍒', audio: 'leci', type: 'Buah' }, { text: 'LEBAH', phonetic: 'Le-bah', emoji: '🐝', audio: 'lebah', type: 'Hewan' }],
     funFact: 'Lebah membuat madu yang manis!', type: 'Huruf', category: 'letters'
   },
-  { 
+  {
     id: 'M', letter: 'M', smallLetter: 'm', title: 'M UNTUK MANGGIS', subtitle: 'Mari belajar mengenal huruf M!', bgColor: '#FCE4EC',
     words: [{ text: 'MANGGIS', phonetic: 'Mang-gis', emoji: '🍇', audio: 'manggis', type: 'Buah' }, { text: 'MONYET', phonetic: 'Mo-nyet', emoji: '🐒', audio: 'monyet', type: 'Hewan' }],
     funFact: 'Monyet suka sekali makan pisang!', type: 'Huruf', category: 'letters'
   },
-  { 
+  {
     id: 'N', letter: 'N', smallLetter: 'n', title: 'N UNTUK NANAS', subtitle: 'Mari belajar mengenal huruf N!', bgColor: '#FFFDE7',
     words: [{ text: 'NANAS', phonetic: 'Na-nas', emoji: '🍍', audio: 'nanas', type: 'Buah' }, { text: 'NYAMUK', phonetic: 'Nya-muk', emoji: '🦟', audio: 'nyamuk', type: 'Serangga' }],
     funFact: 'Nanas kulitnya berduri tapi enak!', type: 'Huruf', category: 'letters'
   },
-  { 
+  {
     id: 'O', letter: 'O', smallLetter: 'o', title: 'O UNTUK ORANGUTAN', subtitle: 'Mari belajar mengenal huruf O!', bgColor: '#EFEBE9',
     words: [{ text: 'ORANGUTAN', phonetic: 'O-rang-u-tan', emoji: '🦧', audio: 'orangutan', type: 'Hewan' }, { text: 'OBAT', phonetic: 'O-bat', emoji: '💊', audio: 'obat', type: 'Kesehatan' }],
     funFact: 'Orangutan adalah kera yang cerdas!', type: 'Huruf', category: 'letters'
   },
-  { 
+  {
     id: 'P', letter: 'P', smallLetter: 'p', title: 'P UNTUK PISANG', subtitle: 'Mari belajar mengenal huruf P!', bgColor: '#FFF9C4',
     words: [{ text: 'PISANG', phonetic: 'Pi-sang', emoji: '🍌', audio: 'pisang', type: 'Buah' }, { text: 'PANDA', phonetic: 'Pan-da', emoji: '🐼', audio: 'panda', type: 'Hewan' }],
     funFact: 'Panda suka makan bambu!', type: 'Huruf', category: 'letters'
   },
-  { 
+  {
     id: 'Q', letter: 'Q', smallLetter: 'q', title: 'Q UNTUK QURAN', subtitle: 'Mari belajar mengenal huruf Q!', bgColor: '#E0F7FA',
     words: [{ text: 'QURAN', phonetic: 'Qu-ran', emoji: '📖', audio: 'quran', type: 'Kitab' }, { text: 'QUOKKA', phonetic: 'Qu-ok-ka', emoji: '🐹', audio: 'quokka', type: 'Hewan' }],
     funFact: 'Quokka disebut hewan paling bahagia!', type: 'Huruf', category: 'letters'
   },
-  { 
+  {
     id: 'R', letter: 'R', smallLetter: 'r', title: 'R UNTUK RAMBUTAN', subtitle: 'Mari belajar mengenal huruf R!', bgColor: '#FFEBEE',
     words: [{ text: 'RAMBUTAN', phonetic: 'Ram-bu-tan', emoji: '🍓', audio: 'rambutan', type: 'Buah' }, { text: 'RUSA', phonetic: 'Ru-sa', emoji: '🦌', audio: 'rusa', type: 'Hewan' }],
     funFact: 'Rambutan punya rambut di kulitnya!', type: 'Huruf', category: 'letters'
   },
-  { 
+  {
     id: 'S', letter: 'S', smallLetter: 's', title: 'S UNTUK SINGA', subtitle: 'Mari belajar mengenal huruf S!', bgColor: '#FFFDE7',
     words: [{ text: 'SINGA', phonetic: 'Si-nga', emoji: '🦁', audio: 'singa', type: 'Hewan' }, { text: 'SEMANGKA', phonetic: 'Se-mang-ka', emoji: '🍉', audio: 'semangka', type: 'Buah' }],
     funFact: 'Singa dijuluki raja hutan!', type: 'Huruf', category: 'letters'
   },
-  { 
+  {
     id: 'T', letter: 'T', smallLetter: 't', title: 'T UNTUK TOMAT', subtitle: 'Mari belajar mengenal huruf T!', bgColor: '#FFEBEE',
     words: [{ text: 'TOMAT', phonetic: 'To-mat', emoji: '🍅', audio: 'tomat', type: 'Buah' }, { text: 'TUPAI', phonetic: 'Tu-pai', emoji: '🐿️', audio: 'tupai', type: 'Hewan' }],
     funFact: 'Tupai suka mengubur kacang!', type: 'Huruf', category: 'letters'
   },
-  { 
+  {
     id: 'U', letter: 'U', smallLetter: 'u', title: 'U UNTUK ULAR', subtitle: 'Mari belajar mengenal huruf U!', bgColor: '#E8F5E9',
     words: [{ text: 'ULAR', phonetic: 'U-lar', emoji: '🐍', audio: 'ular', type: 'Hewan' }, { text: 'UBI', phonetic: 'U-bi', emoji: '🍠', audio: 'ubi', type: 'Buah' }],
     funFact: 'Ular tidak punya kaki untuk berjalan!', type: 'Huruf', category: 'letters'
   },
-  { 
+  {
     id: 'V', letter: 'V', smallLetter: 'v', title: 'V UNTUK VANILA', subtitle: 'Mari belajar mengenal huruf V!', bgColor: '#F3E5F5',
     words: [{ text: 'VANILA', phonetic: 'Va-ni-la', emoji: '🍦', audio: 'vanila', type: 'Rasa' }, { text: 'VULTURE', phonetic: 'Vul-ture', emoji: '🦅', audio: 'vulture', type: 'Burung' }],
     funFact: 'Vanila harum dan rasanya enak!', type: 'Huruf', category: 'letters'
   },
-  { 
+  {
     id: 'W', letter: 'W', smallLetter: 'w', title: 'W UNTUK WORTEL', subtitle: 'Mari belajar mengenal huruf W!', bgColor: '#FFF3E0',
     words: [{ text: 'WORTEL', phonetic: 'Wor-tel', emoji: '🥕', audio: 'wortel', type: 'Sayur' }, { text: 'WALANG', phonetic: 'Wa-lang', emoji: '🦗', audio: 'walang', type: 'Serangga' }],
     funFact: 'Wortel bagus untuk kesehatan mata!', type: 'Huruf', category: 'letters'
   },
-  { 
+  {
     id: 'X', letter: 'X', smallLetter: 'x', title: 'X UNTUK XYLOPHONE', subtitle: 'Mari belajar mengenal huruf X!', bgColor: '#E1F5FE',
     words: [{ text: 'XYLOPHONE', phonetic: 'Xy-lo-phone', emoji: '🎹', audio: 'xylophone', type: 'Musik' }, { text: 'X-RAY', phonetic: 'X-ray', emoji: '🩻', audio: 'xray', type: 'Sains' }],
     funFact: 'Xylophone adalah alat musik pukul!', type: 'Huruf', category: 'letters'
   },
-  { 
+  {
     id: 'Y', letter: 'Y', smallLetter: 'y', title: 'Y UNTUK YOYO', subtitle: 'Mari belajar mengenal huruf Y!', bgColor: '#FFF9C4',
     words: [{ text: 'YOYO', phonetic: 'Yo-yo', emoji: '🪀', audio: 'yoyo', type: 'Mainan' }, { text: 'YAK', phonetic: 'Yak', emoji: '🐂', audio: 'yak', type: 'Hewan' }],
     funFact: 'Yoyo bisa berputar sangat cepat!', type: 'Huruf', category: 'letters'
   },
-  { 
+  {
     id: 'Z', letter: 'Z', smallLetter: 'z', title: 'Z UNTUK ZEBRA', subtitle: 'Mari belajar mengenal huruf Z!', bgColor: '#ECEFF1',
     words: [{ text: 'ZEBRA', phonetic: 'Ze-bra', emoji: '🦓', audio: 'zebra', type: 'Hewan' }, { text: 'ZAITUN', phonetic: 'Zai-tun', emoji: '🫒', audio: 'zaitun', type: 'Buah' }],
     funFact: 'Zebra punya tubuh hitam putih!', type: 'Huruf', category: 'letters'
@@ -229,53 +229,53 @@ const quests: Quest[] = [
     };
   }),
   // Fruits
-  { 
+  {
     id: 'apel', letter: 'Apel', smallLetter: '🍎', title: 'APEL MERAH', subtitle: 'Apel rasanya manis!', bgColor: '#FFEBEE',
     words: [{ text: 'APEL', phonetic: 'A-pel', emoji: '🍎', audio: 'apel', type: 'Buah' }],
     funFact: 'Apel bisa berwarna merah, hijau, atau kuning!', type: 'Buah', category: 'fruits'
   },
-  { 
+  {
     id: 'pisang', letter: 'Pisang', smallLetter: '🍌', title: 'PISANG KUNING', subtitle: 'Monyet suka pisang!', bgColor: '#FFFDE7',
     words: [{ text: 'PISANG', phonetic: 'Pi-sang', emoji: '🍌', audio: 'pisang', type: 'Buah' }],
     funFact: 'Pisang mengandung banyak kalium yang baik!', type: 'Buah', category: 'fruits'
   },
-  { 
+  {
     id: 'jeruk', letter: 'Jeruk', smallLetter: '🍊', title: 'JERUK SEGAR', subtitle: 'Jeruk banyak vitamin C!', bgColor: '#FFF3E0',
     words: [{ text: 'JERUK', phonetic: 'Je-ruk', emoji: '🍊', audio: 'jeruk', type: 'Buah' }],
     funFact: 'Jeruk bikin tubuh kita tidak gampang sakit!', type: 'Buah', category: 'fruits'
   },
-  { 
+  {
     id: 'semangka', letter: 'Semangka', smallLetter: '🍉', title: 'SEMANGKA BESAR', subtitle: 'Isinya air yang segar!', bgColor: '#E8F5E9',
     words: [{ text: 'SEMANGKA', phonetic: 'Se-mang-ka', emoji: '🍉', audio: 'semangka', type: 'Buah' }],
     funFact: 'Semangka itu 90% isinya adalah air!', type: 'Buah', category: 'fruits'
   },
-  { 
+  {
     id: 'mangga', letter: 'Mangga', smallLetter: '🥭', title: 'MANGGA MANIS', subtitle: 'Wangi dan enak sekali!', bgColor: '#FFF9C4',
     words: [{ text: 'MANGGA', phonetic: 'Mang-ga', emoji: '🥭', audio: 'mangga', type: 'Buah' }],
     funFact: 'Mangga adalah buah favorit di banyak negara!', type: 'Buah', category: 'fruits'
   },
   // Animals
-  { 
+  {
     id: 'kucing', letter: 'Kucing', smallLetter: '🐱', title: 'KUCING LUCU', subtitle: 'Meong... meong...', bgColor: '#F5F5F5',
     words: [{ text: 'KUCING', phonetic: 'Ku-cing', emoji: '🐱', audio: 'kucing', type: 'Hewan' }],
     funFact: 'Kucing suka tidur sepanjang hari!', type: 'Hewan', category: 'animals'
   },
-  { 
+  {
     id: 'singa', letter: 'Singa', smallLetter: '🦁', title: 'SINGA BERANI', subtitle: 'Aummm... Raja Hutan!', bgColor: '#FFF3E0',
     words: [{ text: 'SINGA', phonetic: 'Si-nga', emoji: '🦁', audio: 'singa', type: 'Hewan' }],
     funFact: 'Singa jantan punya rambut yang lebat!', type: 'Hewan', category: 'animals'
   },
-  { 
+  {
     id: 'gajah', letter: 'Gajah', smallLetter: '🐘', title: 'GAJAH BESAR', subtitle: 'Punya belalai panjang!', bgColor: '#E1F5FE',
     words: [{ text: 'GAJAH', phonetic: 'Ga-jah', emoji: '🐘', audio: 'gajah', type: 'Hewan' }],
     funFact: 'Gajah adalah hewan darat paling besar!', type: 'Hewan', category: 'animals'
   },
-  { 
+  {
     id: 'jerapah', letter: 'Jerapah', smallLetter: '🦒', title: 'JERAPAH TINGGI', subtitle: 'Lehernya panjang sekali!', bgColor: '#FFFDE7',
     words: [{ text: 'JERAPAH', phonetic: 'Je-ra-pah', emoji: '🦒', audio: 'jerapah', type: 'Hewan' }],
     funFact: 'Jerapah bisa tidur sambil berdiri!', type: 'Hewan', category: 'animals'
   },
-  { 
+  {
     id: 'monyet', letter: 'Monyet', smallLetter: '🐒', title: 'MONYET CERDIK', subtitle: 'Suka panjat pohon!', bgColor: '#EFEBE9',
     words: [{ text: 'MONYET', phonetic: 'Mo-nyet', emoji: '🐒', audio: 'monyet', type: 'Hewan' }],
     funFact: 'Monyet menggunakan ekornya untuk keseimbangan!', type: 'Hewan', category: 'animals'
@@ -288,7 +288,7 @@ const Learning: React.FC = () => {
   const { category } = useParams<{ category: string }>();
   const location = useLocation();
   const [currentIdx, setCurrentIdx] = useState(0);
-  
+
   // Filter quests based on category
   const filteredQuests = quests.filter(q => q.category === category);
   const quest = filteredQuests[currentIdx];
@@ -304,11 +304,11 @@ const Learning: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [playingWord, setPlayingWord] = useState<string | null>(null);
   const [isEvaluating, setIsEvaluating] = useState(false);
-  
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [userAvatar, setUserAvatar] = useState('🐱');
   const [hasDrawn, setHasDrawn] = useState(false);
-  
+
   // Reset viewMode and hasDrawn
   useEffect(() => {
     if (category === 'fruits' || category === 'animals') {
@@ -329,7 +329,7 @@ const Learning: React.FC = () => {
     }
   }, [location.search, category]);
 
-  const currentUserId = localStorage.getItem('cerdika_currentUser');
+  const currentUserId = localStorage.getItem('Tadika_currentUser');
 
   // Load user data with real-time sync
   useEffect(() => {
@@ -347,25 +347,25 @@ const Learning: React.FC = () => {
   }, [currentUserId]);
 
   const addStar = async () => {
-    const currentUserId = localStorage.getItem('cerdika_currentUser');
+    const currentUserId = localStorage.getItem('Tadika_currentUser');
     if (currentUserId) {
       try {
         const userRef = ref(db, "students/" + currentUserId);
-        
+
         // Get latest data to avoid race conditions
         const dbRef = ref(db);
         const snapshot = await get(child(dbRef, `students/${currentUserId}`));
-        
+
         if (snapshot.exists()) {
           const userData = snapshot.val();
           const currentStars = userData.stars || 0;
           const completed = userData.completedQuests || [];
           const questKey = `${category}_${quest.id}`;
-          
+
           const updates: any = {
             stars: currentStars + 1
           };
-          
+
           // Save last studied item
           if (category === 'letters') {
             updates.lastLetter = quest.letter;
@@ -376,11 +376,11 @@ const Learning: React.FC = () => {
           } else if (category === 'animals') {
             updates.lastAnimal = quest.letter;
           }
-          
+
           if (!completed.includes(questKey)) {
             updates.completedQuests = [...completed, questKey];
           }
-          
+
           await update(userRef, updates);
           setStars(currentStars + 1);
         }
@@ -417,7 +417,7 @@ const Learning: React.FC = () => {
         ctx.lineCap = 'round';
         ctx.lineWidth = 15;
         ctx.strokeStyle = '#64B5F6';
-        
+
         const rect = canvas.getBoundingClientRect();
         const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
         const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
@@ -510,9 +510,9 @@ const Learning: React.FC = () => {
 
   const handleFinishTracing = async () => {
     if (!canvasRef.current || isEvaluating) return;
-    
+
     setIsEvaluating(true);
-    
+
     try {
       const canvas = canvasRef.current;
       const offCanvas = document.createElement('canvas');
@@ -520,44 +520,44 @@ const Learning: React.FC = () => {
       offCanvas.height = canvas.height;
       const ctx = offCanvas.getContext('2d');
       if (!ctx) throw new Error("No context");
-      
+
       // 1. Gambar ulang dari canvas utama (coretan anak)
       ctx.drawImage(canvas, 0, 0);
-      
+
       // 2. Ubah semua coretan (biru) menjadi hitam pekat agar kontras
       ctx.globalCompositeOperation = 'source-in';
       ctx.fillStyle = '#000000';
       ctx.fillRect(0, 0, offCanvas.width, offCanvas.height);
-      
+
       // 3. Beri latar belakang putih pekat di belakang coretan
       ctx.globalCompositeOperation = 'destination-over';
       ctx.fillStyle = '#FFFFFF';
       ctx.fillRect(0, 0, offCanvas.width, offCanvas.height);
-      
+
       // Kembalikan composite operation ke default
       ctx.globalCompositeOperation = 'source-over';
-      
+
       // Gunakan Tesseract untuk membaca tulisan
       const worker = await createWorker('eng');
       await worker.setParameters({
         tessedit_pageseg_mode: PSM.SINGLE_CHAR, // Single character mode
       });
-      
+
       const { data: { text } } = await worker.recognize(offCanvas);
       await worker.terminate();
-      
+
       const recognizedText = text.trim().toUpperCase();
       const targetLetter = quest.letter.toUpperCase();
-      
+
       console.log("Recognized:", recognizedText, "Target:", targetLetter);
-      
+
       // Cek apakah hasil deteksi mengandung target huruf/angka
       if (recognizedText.includes(targetLetter) || recognizedText === targetLetter) {
         addStar();
         setPraiseType('correct');
         setPraiseText("Hebat! Bentuknya Benar!");
         setShowPraise(true);
-        
+
         setTimeout(() => {
           setShowPraise(false);
           handleNext();
@@ -566,13 +566,13 @@ const Learning: React.FC = () => {
         setPraiseType('wrong');
         setPraiseText("Hampir! Ayo coba perbaiki lagi.");
         setShowPraise(true);
-        
+
         setTimeout(() => {
           setShowPraise(false);
           clearCanvas(); // Otomatis hapus coretan sebelumnya jika salah
         }, 2000);
       }
-      
+
     } catch (error) {
       console.error("OCR Error:", error);
       // Fallback jika ML gagal karena suatu hal
@@ -594,7 +594,7 @@ const Learning: React.FC = () => {
     setPraiseType('success');
     setPraiseText(`Hebat! Kamu sudah belajar mengenal ${quest.letter}.`);
     setShowPraise(true);
-    
+
     // Auto move to next after 2 seconds
     setTimeout(() => {
       setShowPraise(false);
@@ -614,7 +614,7 @@ const Learning: React.FC = () => {
         <IonToolbar className="app-toolbar-v2">
           <div className="header-container-v2">
             <div className="header-left">
-              <motion.button 
+              <motion.button
                 className="header-back-btn-v2"
                 whileTap={{ scale: 0.9 }}
                 onClick={() => router.push('/home', 'back')}
@@ -629,7 +629,7 @@ const Learning: React.FC = () => {
                 </div>
               </div>
             </div>
-            
+
             <div className="header-right">
               {/* Grid button removed per user request */}
             </div>
@@ -671,7 +671,7 @@ const Learning: React.FC = () => {
               >
                 {/* Main Hero Card */}
                 <div className="hero-card full-width-hero" style={{ borderColor: '#1c1c1c', backgroundColor: quest.bgColor }}>
-                  <motion.div 
+                  <motion.div
                     className="letter-box-large"
                     whileTap={{ scale: 0.9 }}
                     onClick={playMainSound}
@@ -704,8 +704,8 @@ const Learning: React.FC = () => {
                 {quest.category !== 'numbers' ? (
                   <div className="words-association-grid">
                     {quest.words?.map((word: WordItem, i: number) => (
-                      <motion.div 
-                        key={i} 
+                      <motion.div
+                        key={i}
                         className="word-card"
                         style={{ borderLeft: `8px solid ${quest.bgColor}` }}
                         whileHover={{ y: -5 }}
@@ -724,7 +724,7 @@ const Learning: React.FC = () => {
                   </div>
                 ) : quest.category === 'numbers' ? (
                   <div className="counting-card-container">
-                    <motion.div 
+                    <motion.div
                       className="counting-square-card"
                       initial={{ scale: 0.8, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
@@ -732,7 +732,7 @@ const Learning: React.FC = () => {
                     >
                       <div className="counting-icons-area">
                         {Array.from({ length: parseInt(quest.letter) }).map((_, i) => (
-                          <motion.span 
+                          <motion.span
                             key={i}
                             className="counting-emoji-item"
                             initial={{ scale: 0 }}
@@ -763,7 +763,7 @@ const Learning: React.FC = () => {
 
                 {/* Finish Button for Fruits/Animals */}
                 {(category === 'fruits' || category === 'animals') && (
-                  <motion.button 
+                  <motion.button
                     className="finish-discovery-btn"
                     whileTap={{ scale: 0.9 }}
                     onClick={handleFinishDiscovery}
@@ -786,7 +786,7 @@ const Learning: React.FC = () => {
                     {/* Background Guide Letter */}
                     <div className="guide-letters-container">
                       <div className="guide-letter-pair">
-                        <span 
+                        <span
                           className="guide-main"
                           style={{ fontSize: quest.letter.length > 2 ? '100px' : quest.letter.length > 1 ? '150px' : '220px' }}
                         >
@@ -797,7 +797,7 @@ const Learning: React.FC = () => {
                         )}
                       </div>
                     </div>
-                    <canvas 
+                    <canvas
                       ref={canvasRef}
                       width={330}
                       height={420}
@@ -811,14 +811,14 @@ const Learning: React.FC = () => {
                       className="tracing-canvas"
                     />
                   </div>
-                  
+
                   <div className="canvas-controls">
                     <button className="control-btn clear" onClick={clearCanvas}>
                       <IonIcon icon={trashOutline} />
                       <span>Hapus</span>
                     </button>
-                    <button 
-                      className={`control-btn done ${isEvaluating ? 'evaluating' : ''}`} 
+                    <button
+                      className={`control-btn done ${isEvaluating ? 'evaluating' : ''}`}
                       onClick={handleFinishTracing}
                       disabled={isEvaluating}
                     >
@@ -833,7 +833,7 @@ const Learning: React.FC = () => {
 
           {/* Nav Controls */}
           <div className="nav-controls-footer">
-            <button 
+            <button
               className={`nav-btn-round ${currentIdx === 0 ? 'disabled' : ''}`}
               onClick={handlePrev}
             >
@@ -842,7 +842,7 @@ const Learning: React.FC = () => {
             <div className="current-step">
               <span>{currentIdx + 1} / {filteredQuests.length}</span>
             </div>
-            <button 
+            <button
               className={`nav-btn-round ${currentIdx === filteredQuests.length - 1 || (viewMode === 'tracing' && !hasDrawn) ? 'disabled' : ''}`}
               onClick={() => {
                 if (viewMode === 'tracing' && !hasDrawn) {
@@ -861,8 +861,8 @@ const Learning: React.FC = () => {
         </div>
 
         {/* Letter/Number Selector Modal */}
-        <IonModal 
-          isOpen={showLetterSelector} 
+        <IonModal
+          isOpen={showLetterSelector}
           onDidDismiss={() => setShowLetterSelector(false)}
           className="letter-selector-modal"
           breakpoints={[0, 0.6]}
@@ -872,8 +872,8 @@ const Learning: React.FC = () => {
             <h3>Pilih {quest.type}</h3>
             <div className="selector-grid">
               {filteredQuests.map((q, i) => (
-                <div 
-                  key={q.id} 
+                <div
+                  key={q.id}
                   className={`selector-item ${i === currentIdx ? 'active' : ''} ${q.category === 'fruits' || q.category === 'animals' ? 'is-emoji' : ''}`}
                   onClick={() => {
                     setCurrentIdx(i);
@@ -894,20 +894,20 @@ const Learning: React.FC = () => {
         {/* Praise Overlay */}
         <AnimatePresence>
           {showPraise && (
-            <motion.div 
+            <motion.div
               className={`praise-overlay ${praiseType}`}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
               <div className="praise-popup">
-                <IonIcon 
+                <IonIcon
                   icon={
-                    (praiseType === 'correct' || praiseType === 'success') ? happyOutline : 
-                    praiseType === 'warning' ? alertCircleOutline : 
-                    closeCircleOutline
-                  } 
-                  className={`praise-icon-large ${praiseType}`} 
+                    (praiseType === 'correct' || praiseType === 'success') ? happyOutline :
+                      praiseType === 'warning' ? alertCircleOutline :
+                        closeCircleOutline
+                  }
+                  className={`praise-icon-large ${praiseType}`}
                 />
                 <h2>{praiseText}</h2>
                 {(praiseType === 'correct' || praiseType === 'success') && <div className="stars-anim">⭐⭐⭐</div>}

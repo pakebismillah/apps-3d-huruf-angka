@@ -13,7 +13,7 @@ const Loading: React.FC = () => {
       setProgress((prev) => {
         if (prev >= 100) {
           clearInterval(timer);
-          sessionStorage.setItem('cerdika_loaded', 'true');
+          sessionStorage.setItem('Tadika_loaded', 'true');
           router.push('/profiles', 'forward', 'replace');
           return 100;
         }
@@ -36,7 +36,7 @@ const Loading: React.FC = () => {
           <div className="loading-main-v2">
             {/* Logo Area (Empty for now) */}
             <div className="logo-container-v2">
-              <img src="/assets/images/logo.png" alt="Cerdika Logo" className="loading-logo-img" />
+              <img src="/assets/images/logo.png" alt="Tadika Logo" className="loading-logo-img" />
             </div>
 
             {/* Progress Section */}

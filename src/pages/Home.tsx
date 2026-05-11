@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { 
-  IonContent, 
-  IonPage, 
-  IonHeader, 
-  IonToolbar, 
-  IonButtons, 
+import {
+  IonContent,
+  IonPage,
+  IonHeader,
+  IonToolbar,
+  IonButtons,
   IonIcon,
   IonFooter,
   useIonRouter
 } from '@ionic/react';
-import { 
-  bookOutline, 
-  calculatorOutline, 
+import {
+  bookOutline,
+  calculatorOutline,
   star,
   logOutOutline,
   homeOutline,
@@ -40,7 +40,7 @@ const Home: React.FC = () => {
   const router = useIonRouter();
   const [user, setUser] = useState<UserProfile | null>(null);
 
-  const currentUserId = localStorage.getItem('cerdika_currentUser');
+  const currentUserId = localStorage.getItem('Tadika_currentUser');
 
   useEffect(() => {
     if (!currentUserId) {
@@ -53,7 +53,7 @@ const Home: React.FC = () => {
       if (snapshot.exists()) {
         setUser({ id: snapshot.key, ...snapshot.val() } as UserProfile);
       } else {
-        localStorage.removeItem('cerdika_currentUser');
+        localStorage.removeItem('Tadika_currentUser');
         router.push('/profiles', 'root', 'replace');
       }
     });
@@ -71,9 +71,9 @@ const Home: React.FC = () => {
         <IonToolbar className="app-toolbar-v2">
           <div className="header-container-v2">
             <div className="header-left">
-              <motion.div 
-                className="logo-circle-v2" 
-                style={{backgroundColor: user.avatarColor}}
+              <motion.div
+                className="logo-circle-v2"
+                style={{ backgroundColor: user.avatarColor }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => router.push('/profile')}
               >
@@ -89,7 +89,7 @@ const Home: React.FC = () => {
                 </div>
               </div>
             </div>
-            
+
             <div className="header-right">
               {/* Profile button removed per user request */}
             </div>
@@ -100,7 +100,7 @@ const Home: React.FC = () => {
       <IonContent className="home-content">
         <div className="home-wrapper">
           <div className="welcome-section">
-            <div className="user-avatar-mini" style={{backgroundColor: user.avatarColor}}>
+            <div className="user-avatar-mini" style={{ backgroundColor: user.avatarColor }}>
               <span>{user.avatarEmoji}</span>
             </div>
             <div className="welcome-text-group">
@@ -153,8 +153,8 @@ const Home: React.FC = () => {
             </div>
 
             {/* Card 3: Buah (Unlockable) */}
-            <div 
-              className={`learning-card card-green ${user.stars < 50 ? 'locked' : ''}`} 
+            <div
+              className={`learning-card card-green ${user.stars < 50 ? 'locked' : ''}`}
               onClick={() => user.stars >= 50 && router.push('/learning/fruits')}
             >
               <div className="card-top">
@@ -184,8 +184,8 @@ const Home: React.FC = () => {
             </div>
 
             {/* Card 4: Hewan (Unlockable) */}
-            <div 
-              className={`learning-card card-red ${user.stars < 100 ? 'locked' : ''}`} 
+            <div
+              className={`learning-card card-red ${user.stars < 100 ? 'locked' : ''}`}
               onClick={() => user.stars >= 100 && router.push('/learning/animals')}
             >
               <div className="card-top">
@@ -219,8 +219,8 @@ const Home: React.FC = () => {
 
       <IonFooter className="ion-no-border home-footer">
         <div className="nav-bar">
-          <motion.div 
-            className="nav-item active" 
+          <motion.div
+            className="nav-item active"
             initial={false}
             animate={{ y: -5 }}
             onClick={() => router.push('/home')}
@@ -229,16 +229,16 @@ const Home: React.FC = () => {
             <span>Beranda</span>
             <motion.div className="nav-indicator" layoutId="nav-indicator" />
           </motion.div>
-          <motion.div 
-            className="nav-item" 
+          <motion.div
+            className="nav-item"
             whileTap={{ scale: 0.9 }}
             onClick={() => router.push('/games')}
           >
             <IonIcon icon={gameControllerOutline} />
             <span>Bermain</span>
           </motion.div>
-          <motion.div 
-            className="nav-item" 
+          <motion.div
+            className="nav-item"
             whileTap={{ scale: 0.9 }}
             onClick={() => router.push('/profile')}
           >

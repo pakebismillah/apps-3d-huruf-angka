@@ -46,7 +46,7 @@ const Register: React.FC = () => {
       });
 
       // Set as current user and go to home
-      localStorage.setItem('cerdika_currentUser', newStudentRef.key as string);
+      localStorage.setItem('Tadika_currentUser', newStudentRef.key as string);
       router.push('/home', 'forward', 'replace');
     } catch (e) {
       console.error("Error adding document: ", e);
@@ -60,7 +60,7 @@ const Register: React.FC = () => {
       <IonContent className="register-content">
         <div className="register-wrapper">
           <div className="header-logo">
-            <img src="/assets/images/logo.png" alt="Cerdika Logo" className="brand-logo-register" />
+            <img src="/assets/images/logo.png" alt="Tadika Logo" className="brand-logo-register" />
           </div>
 
           <div className="card-container">
@@ -84,7 +84,7 @@ const Register: React.FC = () => {
               <label>Pilih teman belajarmu:</label>
               <div className="avatar-grid">
                 {avatars.map((avatar) => (
-                  <div 
+                  <div
                     key={avatar.id}
                     className={`avatar-item ${selectedAvatar === avatar.id ? 'selected' : ''}`}
                     style={{ backgroundColor: avatar.color }}
@@ -110,7 +110,7 @@ const Register: React.FC = () => {
             buttons={['OK']}
           />
 
-          <p className="login-text" onClick={() => router.push('/profiles', 'back')} style={{cursor: 'pointer'}}>
+          <p className="login-text" onClick={() => router.push('/profiles', 'back')} style={{ cursor: 'pointer' }}>
             Kembali ke daftar teman
           </p>
         </div>

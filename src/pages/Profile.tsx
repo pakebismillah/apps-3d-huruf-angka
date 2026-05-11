@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  IonContent, 
-  IonPage, 
-  IonHeader, 
-  IonToolbar, 
-  IonButtons, 
+import {
+  IonContent,
+  IonPage,
+  IonHeader,
+  IonToolbar,
+  IonButtons,
   IonIcon,
   IonFooter,
   useIonRouter,
   IonModal,
   IonButton
 } from '@ionic/react';
-import { 
-  settingsOutline, 
-  star, 
-  trophyOutline, 
-  medalOutline, 
-  bookOutline, 
+import {
+  settingsOutline,
+  star,
+  trophyOutline,
+  medalOutline,
+  bookOutline,
   colorPaletteOutline,
   homeOutline,
   libraryOutline,
@@ -40,7 +40,7 @@ const Profile: React.FC = () => {
   const avatars = ['🐱', '🦁', '🐶', '🐰', '🐼', '🐯', '🐨', '🐸', '🐷', '🐵', '🦊', '🦒'];
 
   const updateAvatar = async (emoji: string) => {
-    const currentUserId = localStorage.getItem('cerdika_currentUser');
+    const currentUserId = localStorage.getItem('Tadika_currentUser');
     if (currentUserId) {
       const userRef = ref(db, "students/" + currentUserId);
       await update(userRef, { avatarEmoji: emoji });
@@ -49,7 +49,7 @@ const Profile: React.FC = () => {
   };
 
   useEffect(() => {
-    const currentUserId = localStorage.getItem('cerdika_currentUser');
+    const currentUserId = localStorage.getItem('Tadika_currentUser');
     if (currentUserId) {
       const userRef = ref(db, "students/" + currentUserId);
       const unsub = onValue(userRef, (snapshot) => {
@@ -80,7 +80,7 @@ const Profile: React.FC = () => {
   // ... (JSX changes below)
 
   const handleLogout = () => {
-    localStorage.removeItem('cerdika_currentUser');
+    localStorage.removeItem('Tadika_currentUser');
     router.push('/profiles', 'root', 'replace'); // Confirming '/profiles' is correct for account switching
   };
 
@@ -90,7 +90,7 @@ const Profile: React.FC = () => {
         <IonToolbar className="app-toolbar-v2">
           <div className="header-container-v2">
             <div className="header-left">
-              <div className="logo-circle-v2" style={{backgroundColor: user?.avatarColor || '#64B5F6'}}>
+              <div className="logo-circle-v2" style={{ backgroundColor: user?.avatarColor || '#64B5F6' }}>
                 <span className="logo-emoji">{user?.avatarEmoji || '👤'}</span>
               </div>
               <div className="brand-info-v2">
@@ -103,14 +103,14 @@ const Profile: React.FC = () => {
                 </div>
               </div>
             </div>
-            
+
             <div className="header-right">
-              <motion.button 
+              <motion.button
                 className="header-logout-btn-v2"
                 whileTap={{ scale: 0.9 }}
                 onClick={handleLogout}
               >
-                 Keluar
+                Keluar
               </motion.button>
             </div>
           </div>
@@ -122,7 +122,7 @@ const Profile: React.FC = () => {
           <h1 className="page-title">Profil Kamu</h1>
 
           {/* Main Profile Card */}
-          <motion.div 
+          <motion.div
             className="main-profile-card"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -132,18 +132,18 @@ const Profile: React.FC = () => {
               <div className="avatar-circle" style={{ backgroundColor: user?.avatarColor || '#fff9c4' }}>
                 <span style={{ fontSize: '4rem' }}>{user?.avatarEmoji || '👤'}</span>
               </div>
-              <motion.div 
-                className="edit-avatar" 
+              <motion.div
+                className="edit-avatar"
                 whileTap={{ scale: 0.9 }}
                 onClick={() => setShowAvatarSelector(true)}
               >
                 <IonIcon icon={colorPaletteOutline} />
               </motion.div>
             </div>
-            
+
             <h2 className="user-greeting">Halo, {user?.name || 'Si Pintar'}!</h2>
             <p className="user-motivation">Kamu sudah belajar banyak hal luar biasa hari ini.</p>
-            
+
             <div className="stats-pills">
               <div className="stat-pill xp">{user?.stars || 0} Bintang</div>
             </div>
@@ -152,8 +152,8 @@ const Profile: React.FC = () => {
           {/* Progress Section */}
           <div className="section-group">
             <h3 className="section-title">Aktivitas Terakhir</h3>
-            
-            <motion.div 
+
+            <motion.div
               className="progress-card actionable"
               whileTap={{ scale: 0.98 }}
               onClick={() => {
@@ -169,7 +169,7 @@ const Profile: React.FC = () => {
                 <span className="value-highlight">{user?.lastLetter || 'Kosong'}</span>
               </div>
               <div className="progress-bar-bg">
-                <motion.div 
+                <motion.div
                   className="progress-bar-fill yellow"
                   initial={{ width: 0 }}
                   animate={{ width: `${(letterCount / 26) * 100}%` }}
@@ -180,7 +180,7 @@ const Profile: React.FC = () => {
               </p>
             </motion.div>
 
-            <motion.div 
+            <motion.div
               className="progress-card actionable"
               whileTap={{ scale: 0.98 }}
               onClick={() => {
@@ -196,7 +196,7 @@ const Profile: React.FC = () => {
                 <span className="value-highlight">{user?.lastNumber || 'Kosong'}</span>
               </div>
               <div className="progress-bar-bg">
-                <motion.div 
+                <motion.div
                   className="progress-bar-fill green"
                   initial={{ width: 0 }}
                   animate={{ width: `${(numberCount / 50) * 100}%` }}
@@ -207,7 +207,7 @@ const Profile: React.FC = () => {
               </p>
             </motion.div>
 
-            <motion.div 
+            <motion.div
               className="progress-card actionable"
               whileTap={{ scale: 0.98 }}
               onClick={() => {
@@ -223,7 +223,7 @@ const Profile: React.FC = () => {
                 <span className="value-highlight">{user?.lastFruit || 'Kosong'}</span>
               </div>
               <div className="progress-bar-bg">
-                <motion.div 
+                <motion.div
                   className="progress-bar-fill red"
                   initial={{ width: 0 }}
                   animate={{ width: `${(fruitCount / 5) * 100}%` }}
@@ -234,7 +234,7 @@ const Profile: React.FC = () => {
               </p>
             </motion.div>
 
-            <motion.div 
+            <motion.div
               className="progress-card actionable"
               whileTap={{ scale: 0.98 }}
               onClick={() => {
@@ -250,7 +250,7 @@ const Profile: React.FC = () => {
                 <span className="value-highlight">{user?.lastAnimal || 'Kosong'}</span>
               </div>
               <div className="progress-bar-bg">
-                <motion.div 
+                <motion.div
                   className="progress-bar-fill purple"
                   initial={{ width: 0 }}
                   animate={{ width: `${(animalCount / 5) * 100}%` }}
@@ -272,8 +272,8 @@ const Profile: React.FC = () => {
           </div>
         </div>
         {/* Avatar Selector Modal */}
-        <IonModal 
-          isOpen={showAvatarSelector} 
+        <IonModal
+          isOpen={showAvatarSelector}
           onDidDismiss={() => setShowAvatarSelector(false)}
           className="avatar-modal"
           breakpoints={[0, 0.4]}
@@ -285,7 +285,7 @@ const Profile: React.FC = () => {
               <h3 className="modal-title-v2">Pilih Karaktermu</h3>
               <div className="avatar-grid-v2">
                 {avatars.map((emoji) => (
-                  <motion.div 
+                  <motion.div
                     key={emoji}
                     className={`avatar-option-v2 ${user?.avatarEmoji === emoji ? 'active' : ''}`}
                     whileTap={{ scale: 0.9 }}

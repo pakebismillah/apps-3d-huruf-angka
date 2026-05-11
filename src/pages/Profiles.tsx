@@ -30,14 +30,14 @@ const Profiles: React.FC = () => {
         profilesData.push({ id: childSnapshot.key, ...childSnapshot.val() } as UserProfile);
       });
       setProfiles(profilesData);
-      localStorage.setItem('cerdika_users', JSON.stringify(profilesData));
+      localStorage.setItem('Tadika_users', JSON.stringify(profilesData));
     });
 
     return () => unsubscribe();
   }, []);
 
   const handleSelectProfile = (profile: UserProfile) => {
-    localStorage.setItem('cerdika_currentUser', profile.id);
+    localStorage.setItem('Tadika_currentUser', profile.id);
     router.push('/home', 'forward', 'replace');
   };
 
@@ -57,20 +57,20 @@ const Profiles: React.FC = () => {
         </div>
 
         <div className="profiles-container-v2">
-          <motion.div 
+          <motion.div
             className="profiles-header-v2"
             initial={{ opacity: 0, y: -50 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <img src="/assets/images/logo.png" alt="Cerdika Logo" className="brand-logo-profiles" />
+            <img src="/assets/images/logo.png" alt="Tadika Logo" className="brand-logo-profiles" />
             <h1 className="main-title-v2">Halo, Teman Pintar!</h1>
             <p className="sub-title-v2">Pilih siapa yang mau bertualang hari ini?</p>
           </motion.div>
 
           <div className="profiles-grid-v2">
             {profiles.map((profile, index) => (
-              <motion.div 
-                key={profile.id} 
+              <motion.div
+                key={profile.id}
                 className="profile-card-v2"
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -79,8 +79,8 @@ const Profiles: React.FC = () => {
                 whileTap={{ scale: 0.95 }}
                 onClick={() => handleSelectProfile(profile)}
               >
-                <div 
-                  className="profile-avatar-v2" 
+                <div
+                  className="profile-avatar-v2"
                   style={{ backgroundColor: profile.avatarColor || '#64B5F6' }}
                 >
                   <span className="avatar-emoji-v2">{profile.avatarEmoji}</span>
@@ -95,8 +95,8 @@ const Profiles: React.FC = () => {
                 </div>
               </motion.div>
             ))}
-            
-            <motion.div 
+
+            <motion.div
               className="profile-card-v2 add-new-card-v2"
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
