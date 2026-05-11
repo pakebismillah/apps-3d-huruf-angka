@@ -12,9 +12,8 @@
   justify-content: center;
   background-color: #fbd63c;
   /* Add subtle dot pattern */
-  background-image: radial-gradient(#1c1c1c 1px, transparent 1px);
+  background-image: radial-gradient(rgba(28, 28, 28, 0.1) 1px, transparent 1px);
   background-size: 25px 25px;
-  background-opacity: 0.05;
 }
 
 .loading-screen-v2::before {
